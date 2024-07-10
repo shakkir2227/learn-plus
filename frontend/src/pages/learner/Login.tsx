@@ -1,11 +1,36 @@
 import React from 'react'
+import Logo from '../../components/shared/Logo'
+import { Button } from '../../components/ui/button'
+import { Link } from 'react-router-dom'
 
 const Login:React.FC = () => {
-  return (
-    <div>
-      
-    </div>
-  )
+    return (
+        <div className="bg-customBg md:h-[1000px] h-[1300px] " >
+            <Logo />
+            <div className='text-center mt-16'>
+                <span className='md:text-4xl font-serif text-2xl'> Unlock Your Potential <br /> Log In to <span className='font-bold'>Learn Plus</span> </span>
+            </div>
+            <div className='md:w-1/3 w-3/4 md:h-[430px]  border-gray-500 border-2 rounded-lg mx-auto mt-8'>
+                <p className='text-center mt-5 font-thin ml-2'>Ready to dive in? Let's get you started!  </p>
+                <form className=' flex flex-col h-full'>
+                    <label htmlFor='email' className='md:ml-8 ml-5 mt-3' >Email </label>
+                    <input className='bg-inputColor  border-gray-400 border-2 rounded-md w-5/6 mx-auto h-9 px-2'
+                        type='email'
+                        id='email'
+                    />
+                    <label htmlFor='password' className='md:ml-8 ml-5 mt-3'>Password </label>
+                    <input className='bg-inputColor  border-gray-400 border-2 rounded-md w-5/6 mx-auto h-9 px-2'
+                        type='password'
+                        id='password'
+                    />
+
+                    <Button className='w-5/6 mx-auto mt-5' >Log in</Button>
+                    <p className='text-center my-5'>Don't have an account?? <Link to={"/signup"}> Sign up </Link></p>
+
+                </form>
+            </div>
+        </div>
+    )
 }
 
 export default Login
