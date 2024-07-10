@@ -1,15 +1,14 @@
-class ApiError extends Error {
+class ApiError {
     public success: Boolean
-    public data: null 
+    public data: null
 
     constructor(
         public statusCode: number,
-        public message: string = "Something went wrong!!",
+        public message: string,
 
     ) {
-        super(message)
-        this.statusCode = statusCode || 500
         this.message = message
+        this.statusCode = statusCode || 500
         this.success = false
         this.data = null
     }

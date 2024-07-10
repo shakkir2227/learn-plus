@@ -13,8 +13,10 @@ app.use(express.static("public"))
 import learnerRouter from "./routes/learner.routes"
 import errorHandler from './middlewares/error.middleware'
 
+
+
 // Route declaration
-app.use(`${BASE_URL}/learner`, learnerRouter)
+app.use(`${BASE_URL}/learners`, learnerRouter)
 
 app.use(errorHandler)
 

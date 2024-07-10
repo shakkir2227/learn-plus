@@ -10,8 +10,8 @@ const connectDB = async (): Promise<void> => {
     } catch (error) {
         console.log(`MongoDB connection Error: ${error}`)
         process.exit(1)
-    }
-
-}
+    } 
+ 
+} 
 
 export default connectDB
