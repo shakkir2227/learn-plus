@@ -15,7 +15,7 @@ const getRequestOptions = (method: string, body: unknown): RequestInit => {
     return requestOptions
 }
 
-const makeRequest = async (URL: string, requestOptions: RequestInit) => {
+const makeRequest = async (URL: string, requestOptions?: RequestInit) => {
     try {
         const response = await fetch(LEARNER_BASE_URL + URL, requestOptions)
         const result = await response.json()
@@ -53,6 +53,8 @@ const verifyEmailService = async (OTP: string, learnerId: string):
     const requestOptions = getRequestOptions("POST", { OTP, learnerId })
     return await makeRequest("/verify-email", requestOptions)
 }
+
+
 
 export {
     signUpService,

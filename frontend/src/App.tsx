@@ -1,9 +1,13 @@
 import RoutePaths from "./routes"
+import { Provider } from "react-redux"
+import store from "./store"
 
 
 const App = () => {
     return (
-        <RoutePaths />
+        <Provider store={store}>
+            <RoutePaths />
+        </Provider>
     )
 }
 

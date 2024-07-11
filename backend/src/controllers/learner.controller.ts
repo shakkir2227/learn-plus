@@ -64,7 +64,7 @@ const verifyLearnerEmail = asyncHandler(async (req, res, next) => {
     const otp = await OTP.findOne({ userId: learnerId })
     if (!otp) return next(new ApiError(400, "The OTP has expired. Please click 'Resend OTP' to receive a new one."))
 
-    if (!isOTPCorrect(inputOTP, otp.OTP)) return next(new ApiError(400, "The OTP entered is invalid. Please check and try again."))
+    if (! await isOTPCorrect(inputOTP, otp.OTP)) return next(new ApiError(400, "The OTP entered is invalid. Please check and try again."))
 
     await Learner.updateOne({ _id: learnerId }, { isVerified: true })
     const learner = await Learner.findOne({_id: learnerId}, {

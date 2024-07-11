@@ -25,8 +25,7 @@ const Login:React.FC = () => {
                     />
 
                     <Button className='w-5/6 mx-auto mt-5' >Log in</Button>
-                    <p className='text-center my-5'>Don't have an account?? <Link to={"/signup"}> Sign up </Link></p>
-
+                    <p className='text-center my-5 mx-2 text-sm'>Don't have an account?? <Link to={"/signup"} className='cursor-pointer underline ' > Sign up </Link></p>
                 </form>
             </div>
         </div>

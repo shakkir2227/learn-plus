@@ -8,6 +8,7 @@ import { signUpService } from "../../services/learner/AuthService.ts"
 import toast, { Toaster } from 'react-hot-toast';
 import isSignUpFormValid from '../../utils/isSignUpFormValid.ts'
 import { ROUTE_PATHS } from '../../constants.ts'
+import ErrorToast from '../../components/shared/ErrorToast.tsx'
 
 const Signup: React.FC = () => {
     const navigate = useNavigate()
@@ -28,19 +29,10 @@ const Signup: React.FC = () => {
 
         const response = await signUpService(signupFormData)
         setLoading(false)
-        if (!response.success) {
-            toast.custom(() => (
-                <div className="bg-white border border-gray-200 rounded-lg shadow-lg flex max-w-md w-full ring-1 ring-black ring-opacity-5">
-                    <div className="flex-1 p-4">
-                        <div className="flex items-start">
-                            <div className="ml-3">
-                                <p className="text-sm font-medium text-gray-900">Registration Error</p>
-                                <p className="mt-1 text-sm text-gray-500">{response.message}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            ));
+        if (!response.success && response.message) {
+            toast.custom((t) => (
+                <ErrorToast message={response.message as string} t={t}></ErrorToast>
+            ))
         } else {
             localStorage.setItem("UUI", response.data as string)
             navigate(ROUTE_PATHS.verify)
@@ -85,7 +77,7 @@ const Signup: React.FC = () => {
                         onChange={handleChange}
                     />
                     <Button className='w-5/6 mx-auto mt-5' disabled={loading} >Sign up</Button>
-                    <p className='text-center my-5'>Already on Learn plus? <Link to={"/login"}> Log in </Link></p>
+                    <p className='text-center my-5 text-sm'>Already on Learn plus? <Link to={"/login"} className='cursor-pointer underline '> Log in </Link></p>
                 </form>
             </div>
             <Toaster />
