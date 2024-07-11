@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Logo from '../../components/shared/Logo'
 import { Button } from '../../components/ui/button'
 import { Link, useNavigate } from 'react-router-dom'
@@ -11,6 +11,7 @@ import { ROUTE_PATHS } from '../../constants.ts'
 
 const Signup: React.FC = () => {
     const navigate = useNavigate()
+    const [loading, setLoading] = useState<boolean>(false)
     const {
         signupFormData,
         handleChange,
@@ -19,9 +20,14 @@ const Signup: React.FC = () => {
     } = useSignupFormData()
 
     async function handleSubmit(signupFormData: IsignupFormData) {
-        if (!isSignUpFormValid(signupFormData, setSignupFormError)) return
+        setLoading(true)
+        if (!isSignUpFormValid(signupFormData, setSignupFormError)) {
+            setLoading(false)
+            return
+        }
 
         const response = await signUpService(signupFormData)
+        setLoading(false)
         if (!response.success) {
             toast.custom(() => (
                 <div className="bg-white border border-gray-200 rounded-lg shadow-lg flex max-w-md w-full ring-1 ring-black ring-opacity-5">
@@ -41,6 +47,7 @@ const Signup: React.FC = () => {
         }
     }
 
+    // TODO: create a spinner while registering
     return (
         <div className="bg-customBg md:h-[1000px] h-[1500px] ">
             <Logo />
@@ -77,7 +84,7 @@ const Signup: React.FC = () => {
                         value={signupFormData.password}
                         onChange={handleChange}
                     />
-                    <Button className='w-5/6 mx-auto mt-5' >Sign up</Button>
+                    <Button className='w-5/6 mx-auto mt-5' disabled={loading} >Sign up</Button>
                     <p className='text-center my-5'>Already on Learn plus? <Link to={"/login"}> Log in </Link></p>
                 </form>
             </div>

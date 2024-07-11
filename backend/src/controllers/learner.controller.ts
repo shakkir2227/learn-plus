@@ -1,10 +1,11 @@
 import asyncHandler from "../utils/asyncHandler";
 import userRegisterValidatorSchema from "../validators/userRegisterValidator"
-import { Learner } from "../models/learner.model";
-import { OTP } from "../models/otp.model";
+import { ILearner, Learner } from "../models/learner.model";
+import { isOTPCorrect, OTP } from "../models/otp.model";
 import ApiError from "../utils/ApiError";
 import { sendMail, emailVerificationContent } from "../utils/sendMail";
 import ApiResponse from "../utils/ApiResponse";
+import { getAccessTokenAndRefreshToken, ITokens } from "../middlewares/auth.middleware";
 
 interface IlearnerDetails {
     name: string,
@@ -51,10 +52,41 @@ const registerLearner = asyncHandler(async (req, res, next) => {
         mailgenContent: emailVerificationContent(learner.name, OTPNumber),
     });
 
-    return res.json(new ApiResponse(201, learner._id, `Verification Email has been sent` ))
+    return res.json(new ApiResponse(201, learner._id, `Verification Email has been sent`))
 
 })
 
+const verifyLearnerEmail = asyncHandler(async (req, res, next) => {
+
+    const { OTP: inputOTP, learnerId } = req.body
+    if (!inputOTP) return next(new ApiError(400, "Please enter the OTP to proceed with verification"))
+
+    const otp = await OTP.findOne({ userId: learnerId })
+    if (!otp) return next(new ApiError(400, "The OTP has expired. Please click 'Resend OTP' to receive a new one."))
+
+    if (!isOTPCorrect(inputOTP, otp.OTP)) return next(new ApiError(400, "The OTP entered is invalid. Please check and try again."))
+
+    await Learner.updateOne({ _id: learnerId }, { isVerified: true })
+    const learner = await Learner.findOne({_id: learnerId}, {
+        name: 1, email: 1, coursesEnrolled: 1,
+    }) as ILearner
+
+    const result = await getAccessTokenAndRefreshToken(learner, next) // Passing next for error handler
+    const { accessToken, refreshToken } = result as ITokens
+
+    const options = {
+        httpOnly: true,
+        secure: true
+    }
+
+    return res
+        .status(200)
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", refreshToken, options)
+        .json(new ApiResponse(200, learner, "Learner logged In Successfully"))
+})
+
 export {
-    registerLearner
+    registerLearner,
+    verifyLearnerEmail
 }

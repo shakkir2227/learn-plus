@@ -21,8 +21,8 @@ OTPSchema.pre("save", async function (next) {
     next();
 })
 
-OTPSchema.methods.isOTPCorrect = async function (OTP: string) {
-    return await bcrypt.compare(OTP, this.OTP)
+export const isOTPCorrect = async function (inputOTP: string, OTP: string) {
+    return await bcrypt.compare(inputOTP, OTP)
 }
 
 export const OTP = mongoose.model("OTP", OTPSchema)

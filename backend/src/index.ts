@@ -1,8 +1,8 @@
 import dotenv from "dotenv"
+dotenv.config()
 import { httpServer } from "./app";
 import connectDB from "./db";
 
-dotenv.config()
 connectDB()
     .then(() => {
         httpServer.listen(process.env.PORT, () => {

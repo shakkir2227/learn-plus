@@ -1,5 +1,20 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 import bcrypt from "bcrypt"
+
+export interface ILearner extends Document {
+    name: string,
+    email: string,
+    password: string,
+    role: string,
+    refreshToken: string,
+    coursesEnrolled: string,
+    lastSubscription: string,
+    isVerified: boolean,
+    isBlocked: boolean,
+    isAdmin: boolean,
+    createdAt: string,
+    updatedAt: string
+}
 
 const learnerSchema = new Schema({
     name: {
@@ -13,6 +28,11 @@ const learnerSchema = new Schema({
     password: {
         type: String,
         required: true,
+    },
+    role: {
+        type: String,
+        required: true,
+        default: "Learner"
     },
     refreshToken: {
         type: String,
@@ -44,12 +64,11 @@ const learnerSchema = new Schema({
 })
 
 learnerSchema.pre("save", async function (next) {
-    await bcrypt.hash(this.password, 10)
+    if (!this.isModified("password")) return next();
+
+    this.password = await bcrypt.hash(this.password, 10)
     next()
 })
 
-learnerSchema.methods.isPasswordCorrect = async function (password: string) {
-    return bcrypt.compare(password, this.password)
-}
 
-export const Learner = mongoose.model("Learner", learnerSchema)
+export const Learner = mongoose.model<ILearner>("Learner", learnerSchema)
