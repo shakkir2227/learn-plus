@@ -8,7 +8,6 @@ interface Ioptions {
 }
 
 export const sendMail = async (options: Ioptions) => {
-
     let config = {
         service: "gmail",
         auth: {

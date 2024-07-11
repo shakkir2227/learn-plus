@@ -1,9 +1,8 @@
 import { Request, Response, NextFunction } from "express"
-import ApiResponse from "./ApiResponse"
 import ApiError from "./ApiError"
 
 type ControllerFn = (req: Request, res: Response, next: NextFunction) =>
-    Promise<Promise<ApiResponse<unknown>> | void>
+    Promise<void | Response<any, Record<string, any>>>
 
 
 const asyncHandler = (fn: ControllerFn) => {

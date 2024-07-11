@@ -1,8 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcrypt"
 
-
-const userSchema = new Schema({
+const learnerSchema = new Schema({
     name: {
         type: String,
         required: true,
@@ -44,13 +43,13 @@ const userSchema = new Schema({
     timestamps: true
 })
 
-userSchema.pre("save", async function (next) {
+learnerSchema.pre("save", async function (next) {
     await bcrypt.hash(this.password, 10)
     next()
 })
 
-userSchema.methods.isPasswordCorrect = async function (password: string) {
+learnerSchema.methods.isPasswordCorrect = async function (password: string) {
     return bcrypt.compare(password, this.password)
 }
 
-export const User = mongoose.model("User", userSchema)
+export const Learner = mongoose.model("Learner", learnerSchema)

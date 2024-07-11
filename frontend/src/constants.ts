@@ -3,4 +3,5 @@ export enum  ROUTE_PATHS  {
     instructor = "/instructor",
     signup = "/signup",
     login = "/login",
+    verify = "/verify"
 }
