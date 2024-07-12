@@ -49,10 +49,10 @@ const signUpService = async (instructorDetails: IsignupFormData):
     }
 }
 
-const verifyEmailService = async (OTP: string, learnerId: string):
+const verifyEmailService = async (OTP: string, instructorId: string):
     Promise<ApiResponse<string> | IApiError> => {
 
-    const requestOptions = getRequestOptions("POST", { OTP, learnerId })
+    const requestOptions = getRequestOptions("POST", { OTP, instructorId })
     return await makeRequest("/verify-email", requestOptions)
 }
 

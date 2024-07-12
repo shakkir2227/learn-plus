@@ -12,17 +12,16 @@ import { getLoggedInUserService } from "../services/instructor/AuthService"
 
 const InstructorRoutes: React.FC = () => {
     const dispatch = useAppDispatch()
-
-    // change
-    // const loggedIn = useAppSelector((state) => (state.instructor.auth.isLoggedIn))
-    // if (!loggedIn) {
-    //     (async function () {
-    //         const response = await getLoggedInUserService()
-    //         if (response.success) {
-    //             dispatch(login(response.data))
-    //         }
-    //     }())
-    // }
+    const loggedIn = useAppSelector((state) => (state.instructor.auth.isLoggedIn))
+    
+    if (!loggedIn) {
+        (async function () {
+            const response = await getLoggedInUserService()
+            if (response.success) {
+                dispatch(login(response.data))
+            }
+        }())
+    }
 
     return (
         <Routes>

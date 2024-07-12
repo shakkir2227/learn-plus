@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Logo from '../../components/shared/Logo'
 import { Button } from '../../components/ui/button'
 import toast, { Toaster } from 'react-hot-toast'
@@ -7,7 +7,7 @@ import ErrorToast from '../../components/shared/ErrorToast'
 import { useAppDispatch } from '../../store'
 import { login } from '../../store/LearnerSlice'
 import { useNavigate } from 'react-router'
-import { LEARNER_ROUTE_PATHS, ROUTE_PATHS } from '../../constants'
+import { LEARNER_ROUTE_PATHS } from '../../constants'
 
 const Verify: React.FC = () => {
     const [OTP, setOTP] = useState<string>()
@@ -31,6 +31,10 @@ const Verify: React.FC = () => {
             navigate(LEARNER_ROUTE_PATHS.root)
         }
     }
+
+    useEffect(() => {
+        if (!localStorage.getItem("UUI")) navigate(LEARNER_ROUTE_PATHS.signup)
+    })
 
     return (
         <div className="bg-customBg md:h-[1000px] h-[1500px] ">

@@ -16,10 +16,10 @@ export enum LEARNER_ROUTE_PATHS {
 }
 
 export enum INSTRUCTOR_ROUTE_PATHS {
-    root = "/instructor/",
+    root = "/instructor",
     signup = "/instructor/signup",
     verify = "/instructor/verify",
-    login = "/instructor//login"
+    login = "/instructor/login"
 }
 
 export const LEARNER_BASE_URL = "http://localhost:3000/api/v1/learners"
