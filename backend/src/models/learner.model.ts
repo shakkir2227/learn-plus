@@ -70,5 +70,8 @@ learnerSchema.pre("save", async function (next) {
     next()
 })
 
+export const isPasswordCorrect = async (inputPassword: string, password: string): Promise<boolean> => {
+    return await bcrypt.compare(inputPassword, password)
+}
 
 export const Learner = mongoose.model<ILearner>("Learner", learnerSchema)

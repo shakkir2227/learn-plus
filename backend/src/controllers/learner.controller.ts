@@ -1,6 +1,7 @@
 import asyncHandler from "../utils/asyncHandler";
 import userRegisterValidatorSchema from "../validators/userRegisterValidator"
-import { ILearner, Learner } from "../models/learner.model";
+import userLoginValidatorSchema from "../validators/userLoginValidator"
+import { ILearner, isPasswordCorrect, Learner } from "../models/learner.model";
 import { isOTPCorrect, OTP } from "../models/otp.model";
 import ApiError from "../utils/ApiError";
 import { sendMail, emailVerificationContent } from "../utils/sendMail";
@@ -67,7 +68,7 @@ const verifyLearnerEmail = asyncHandler(async (req, res, next) => {
     if (! await isOTPCorrect(inputOTP, otp.OTP)) return next(new ApiError(400, "The OTP entered is invalid. Please check and try again."))
 
     await Learner.updateOne({ _id: learnerId }, { isVerified: true })
-    const learner = await Learner.findOne({_id: learnerId}, {
+    const learner = await Learner.findOne({ _id: learnerId }, {
         name: 1, email: 1, coursesEnrolled: 1,
     }) as ILearner
 
@@ -86,7 +87,44 @@ const verifyLearnerEmail = asyncHandler(async (req, res, next) => {
         .json(new ApiResponse(200, learner, "Learner logged In Successfully"))
 })
 
+const loginLearner = asyncHandler(async (req, res, next) => {
+
+    const loginDetails: IlearnerDetails = req.body
+
+    const { error } = userLoginValidatorSchema.validate(loginDetails)
+    if (error) return next(new ApiError(422, "Please check your input and try again."))
+
+    const learner = await Learner.findOne({ email: loginDetails.email, isVerified: true })
+    if (!learner) return next(new ApiError(401, "The email address or password you entered does not match our records."))
+
+    if (learner.isBlocked) return next(new ApiError(403, "Your account has been blocked. Please contact support for more information"))
+
+    if (! await isPasswordCorrect(loginDetails.password, learner.password)) {
+        return next(new ApiError(401, "The email address or password you entered does not match our records."))
+    }
+
+    const learnerDetails = await Learner.findOne({ _id: learner._id }, {
+        name: 1, email: 1, coursesEnrolled: 1,
+    }) as ILearner
+
+    const result = await getAccessTokenAndRefreshToken(learner, next) // Passing next for error handler
+    const { accessToken, refreshToken } = result as ITokens
+
+    const options = {
+        httpOnly: true,
+        secure: true
+    }
+
+    return res
+        .status(200)
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", refreshToken, options)
+        .json(new ApiResponse(200, learnerDetails, "Learner logged In Successfully"))
+
+})
+
 export {
     registerLearner,
-    verifyLearnerEmail
+    verifyLearnerEmail,
+    loginLearner,
 }
