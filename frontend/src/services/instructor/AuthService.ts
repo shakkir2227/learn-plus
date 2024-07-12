@@ -2,9 +2,8 @@ import ApiResponse from "../ApiResponse"
 import { ApiError, IApiError } from "../ApiError.ts"
 import { IsignupFormData } from '../../hooks/useSignupForm.ts'
 import { ILoginFormData } from "../../hooks/useLoginForm.ts"
-import { ILearner } from "../../store/LearnerSlice.ts"
-import { LEARNER_BASE_URL } from "../../constants.ts"
-
+import { IInstructor } from "../../store/InstructorSlice.ts"
+import { INSTRUCTOR_BASE_URL } from "../../constants.ts"
 
 const getRequestOptions = (method: string, body?: unknown): RequestInit => {
     const requestOptions = {
@@ -20,7 +19,7 @@ const getRequestOptions = (method: string, body?: unknown): RequestInit => {
 const makeRequest = async (URL: string, requestOptions?: RequestInit) => {
     try {
         const response =
-            await fetch(LEARNER_BASE_URL + URL, { ...requestOptions, credentials: "include" })
+            await fetch(INSTRUCTOR_BASE_URL + URL, { ...requestOptions, credentials: "include" })
         const result = await response.json()
         return result
     }
@@ -33,13 +32,13 @@ const makeRequest = async (URL: string, requestOptions?: RequestInit) => {
 }
 
 // TODO: minifiy this.
-const signUpService = async (learnerDetails: IsignupFormData):
+const signUpService = async (instructorDetails: IsignupFormData):
     Promise<ApiResponse<string> | IApiError> => {
 
-    const requestOptions = getRequestOptions("POST", learnerDetails)
+    const requestOptions = getRequestOptions("POST", instructorDetails)
 
     try {
-        const response = await fetch(LEARNER_BASE_URL + "/register", requestOptions)
+        const response = await fetch(INSTRUCTOR_BASE_URL + "/register", requestOptions)
         const result = await response.json()
         return result
     }
@@ -58,7 +57,7 @@ const verifyEmailService = async (OTP: string, learnerId: string):
 }
 
 const loginService = async (loginFormData: ILoginFormData):
-    Promise<ApiResponse<ILearner> | IApiError> => {
+    Promise<ApiResponse<IInstructor> | IApiError> => {
     const { email, password } = loginFormData
     const requestOptions = getRequestOptions("POST", { email, password })
     return await makeRequest("/login", requestOptions)
@@ -66,7 +65,7 @@ const loginService = async (loginFormData: ILoginFormData):
 
 const getLoggedInUserService = async () => {
     const requestOptions = getRequestOptions("GET")
-    return await makeRequest("/get-loggedIn-learner", requestOptions)
+    return await makeRequest("/get-loggedIn-instructor", requestOptions)
 }
 
 

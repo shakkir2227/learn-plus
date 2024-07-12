@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useAppSelector } from '../../store'
 import { Outlet, useNavigate } from 'react-router'
-import { ROUTE_PATHS } from '../../constants'
+import { LEARNER_ROUTE_PATHS } from '../../constants'
 
 type Props = {
     forLoggedInUsers: boolean,
@@ -14,13 +14,13 @@ const AuthLayout: React.FC<Props> = ({ forLoggedInUsers }) => {
 
     useEffect(() => {
         if (isLoggedIn && !forLoggedInUsers) {
-            navigate(ROUTE_PATHS.root)
+            navigate(LEARNER_ROUTE_PATHS.root)
         } else if (!isLoggedIn && forLoggedInUsers) {
-            navigate(ROUTE_PATHS.login)
+            navigate(LEARNER_ROUTE_PATHS.login)
         }
     })
 
-return <Outlet />
+    return <Outlet />
 }
 
 export default AuthLayout

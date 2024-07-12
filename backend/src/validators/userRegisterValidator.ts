@@ -5,6 +5,7 @@ const schema = Joi.object({
         .pattern(/^[A-Za-z\s]*$/) 
         .min(3)
         .max(30)
+        .trim()
         .required()
         .messages({
             'string.pattern.base': 'Name should only contain letters ',
@@ -15,6 +16,7 @@ const schema = Joi.object({
 
     email: Joi.string()
         .email({ tlds: { allow: false } })
+        .trim()
         .required()
         .messages({
             'string.email': 'Enter a valid email address',

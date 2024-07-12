@@ -9,11 +9,11 @@ import isLoginFormValid from '../../utils/isLoginFormValid'
 import { loginService } from '../../services/learner/AuthService'
 import { useAppDispatch } from '../../store'
 import { login } from '../../store/LearnerSlice'
-import { ROUTE_PATHS } from '../../constants'
+import { LEARNER_ROUTE_PATHS, ROUTE_PATHS } from '../../constants'
 
 const Login: React.FC = () => {
     // TOOD(Improve): using thunk remove loading, dispatching
-    const [loading, setLoading] = useState<boolean>(false) 
+    const [loading, setLoading] = useState<boolean>(false)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const { loginFormData, handleChange } = useLoginForm()
@@ -35,7 +35,7 @@ const Login: React.FC = () => {
         }
         if (response.success) {
             dispatch(login(response.data))
-            navigate(ROUTE_PATHS.root)
+            navigate(LEARNER_ROUTE_PATHS.root)
         }
     }
 

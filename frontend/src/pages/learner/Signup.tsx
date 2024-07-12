@@ -7,7 +7,7 @@ import { IsignupFormData } from '../../hooks/useSignupForm.ts'
 import { signUpService } from "../../services/learner/AuthService.ts"
 import toast, { Toaster } from 'react-hot-toast';
 import isSignUpFormValid from '../../utils/isSignUpFormValid.ts'
-import { ROUTE_PATHS } from '../../constants.ts'
+import { LEARNER_ROUTE_PATHS, ROUTE_PATHS } from '../../constants.ts'
 import ErrorToast from '../../components/shared/ErrorToast.tsx'
 
 const Signup: React.FC = () => {
@@ -36,11 +36,11 @@ const Signup: React.FC = () => {
         }
         if (response.success) {
             localStorage.setItem("UUI", response.data as string)
-            navigate(ROUTE_PATHS.verify)
+            navigate(LEARNER_ROUTE_PATHS.verify)
         }
     }
 
-    // TODO: create a spinner while registering
+    // TODO: create a spinner while loading
     return (
         <div className="bg-customBg md:h-[1000px] h-[1500px] ">
             <Logo />
@@ -78,7 +78,7 @@ const Signup: React.FC = () => {
                         onChange={handleChange}
                     />
                     <Button className='w-5/6 mx-auto mt-5' disabled={loading} >Sign up</Button>
-                    <p className='text-center my-5 text-sm'>Already on Learn plus? <Link to={"/login"} className='cursor-pointer underline '> Log in </Link></p>
+                    <p className='text-center my-5 text-sm'>Already on Learn plus? <Link to={LEARNER_ROUTE_PATHS.login} className='cursor-pointer underline '> Log in </Link></p>
                 </form>
             </div>
             <Toaster />

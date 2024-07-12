@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Logo from '../../components/shared/Logo'
 import { Button } from '../../components/ui/button'
 import toast, { Toaster } from 'react-hot-toast'
@@ -7,7 +7,7 @@ import ErrorToast from '../../components/shared/ErrorToast'
 import { useAppDispatch } from '../../store'
 import { login } from '../../store/LearnerSlice'
 import { useNavigate } from 'react-router'
-import { ROUTE_PATHS } from '../../constants'
+import { LEARNER_ROUTE_PATHS, ROUTE_PATHS } from '../../constants'
 
 const Verify: React.FC = () => {
     const [OTP, setOTP] = useState<string>()
@@ -28,7 +28,7 @@ const Verify: React.FC = () => {
         if (response.success) {
             dispatch(login(response.data))
             localStorage.removeItem("UUI")
-            navigate(ROUTE_PATHS.learner)
+            navigate(LEARNER_ROUTE_PATHS.root)
         }
     }
 

@@ -10,10 +10,10 @@ export default function isSignUpFormValid
     let signupFormErrorCopy: IsignupFormError = { nameError: null, emailError: null, passwordError: null }
 
     const { name, email, password } = signupFormData
-    if (!/^[A-Za-z\s]{2,29}$/.test(name)) {
+    if (!/^[A-Za-z\s]{2,29}$/.test(name.trim())) {
         signupFormErrorCopy = { ...signupFormErrorCopy, ["nameError"]: "Name should only include alphabetic characters" }
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
         signupFormErrorCopy = { ...signupFormErrorCopy, ["emailError"]: "Please enter a valid email address." }
 
     }
