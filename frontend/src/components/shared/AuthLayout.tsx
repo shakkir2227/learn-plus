@@ -20,7 +20,7 @@ const AuthLayout: React.FC<Props> = ({ forLoggedInUsers }) => {
         }
     })
 
-    return <Outlet />
+return <Outlet />
 }
 
 export default AuthLayout

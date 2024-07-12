@@ -6,7 +6,7 @@ import { isOTPCorrect, OTP } from "../models/otp.model";
 import ApiError from "../utils/ApiError";
 import { sendMail, emailVerificationContent } from "../utils/sendMail";
 import ApiResponse from "../utils/ApiResponse";
-import { getAccessTokenAndRefreshToken, ITokens } from "../middlewares/auth.middleware";
+import { getAccessTokenAndRefreshToken, ICustomRequest, ITokens, IUser } from "../middlewares/auth.middleware";
 
 interface IlearnerDetails {
     name: string,
@@ -73,7 +73,7 @@ const verifyLearnerEmail = asyncHandler(async (req, res, next) => {
         name: 1, email: 1, coursesEnrolled: 1,
     }) as ILearner
 
-    const result = await getAccessTokenAndRefreshToken(learner, next) // Passing next for error handler
+    const result = await getAccessTokenAndRefreshToken(learner as IUser, next) // Passing next for error handler
     const { accessToken, refreshToken } = result as ITokens
 
     const options = {
@@ -108,7 +108,7 @@ const loginLearner = asyncHandler(async (req, res, next) => {
         name: 1, email: 1, coursesEnrolled: 1,
     }) as ILearner
 
-    const result = await getAccessTokenAndRefreshToken(learner, next) // Passing next for error handler
+    const result = await getAccessTokenAndRefreshToken(learner as IUser, next) // Passing next for error handler
     const { accessToken, refreshToken } = result as ITokens
 
     const options = {
@@ -124,8 +124,19 @@ const loginLearner = asyncHandler(async (req, res, next) => {
 
 })
 
+const getLoggedInLearner = asyncHandler(async (req, res, next) => {
+    const { user } = req as ICustomRequest
+
+    const learner = await Learner.findOne({ _id: user._id }, {
+        name: 1, email: 1, coursesEnrolled: 1,
+    }) as ILearner
+
+    return res.json(new ApiResponse(200, learner, "User data fetched Successfully"))
+})
+
 export {
     registerLearner,
     verifyLearnerEmail,
     loginLearner,
+    getLoggedInLearner
 }
