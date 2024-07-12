@@ -3,6 +3,7 @@ import { Learner } from "../models/learner.model"
 import { Document } from "mongoose";
 import { NextFunction, Request, Response } from "express"
 import ApiError from "../utils/ApiError"
+import { Instructor } from "../models/instructor.model";
 
 export interface ITokens {
     accessToken: string
@@ -32,9 +33,9 @@ export const verifyJWT = async (req: Request, res: Response, next: NextFunction)
 
     try {
         const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET as string) as IJWTPayload
-        const user = decoded.role === ("Learner" || "Admin")
+        const user = (decoded.role === "Learner" || decoded.role === "Admin")
             ? await Learner.findById(decoded._id) as IUser
-            : await Learner.findById(decoded._id) as IUser// TODO: Change this!! Create instructor model. 
+            : await Instructor.findById(decoded._id) as IUser// TODO: Change this!! Create instructor model. 
 
         req.user = user
         next()
