@@ -3,15 +3,23 @@ import Signup from "../pages/learner/Signup"
 import Verify from "../pages/learner/Verify"
 import Login from "../pages/learner/Login"
 import { ROUTE_PATHS } from "../constants"
-import { useAppSelector } from "../store"
+import { useAppDispatch, useAppSelector } from "../store"
 import AuthLayout from "../components/shared/AuthLayout"
 import Home from "../pages/learner/Home"
+import { getLoggedInLearnerService } from "../services/learner/AuthService"
+import { login } from "../store/LearnerSlice"
 
 const LearnerRoutes: React.FC = () => {
+    const dispatch = useAppDispatch()
 
     const loggedIn = useAppSelector((state) => (state.learner.auth.isLoggedIn))
     if (!loggedIn) {
-        // TODO: Get current using token.
+        (async function () {
+            const response = await getLoggedInLearnerService()
+            if (response.success) {
+                dispatch(login(response.data))
+            }
+        }())
     }
 
     return (

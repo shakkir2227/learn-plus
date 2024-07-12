@@ -6,7 +6,7 @@ import { ILearner } from "../../store/LearnerSlice.ts"
 
 const LEARNER_BASE_URL = "http://localhost:3000/api/v1/learners"
 
-const getRequestOptions = (method: string, body: unknown): RequestInit => {
+const getRequestOptions = (method: string, body?: unknown): RequestInit => {
     const requestOptions = {
         method,
         headers: {
@@ -64,11 +64,17 @@ const loginService = async (loginFormData: ILoginFormData):
     return await makeRequest("/login", requestOptions)
 }
 
+const getLoggedInLearnerService = async () => {
+    const requestOptions = getRequestOptions("GET")
+    return await makeRequest("/get-loggedIn-learner", requestOptions)
+}
+
 
 export {
     signUpService,
     verifyEmailService,
-    loginService
+    loginService,
+    getLoggedInLearnerService
 }
 
 
