@@ -37,6 +37,7 @@ const registerLearner = asyncHandler(async (req, res, next) => {
     if (!learner) return next(new ApiError(500, "Something went wrong while registering the user"))
 
     let OTPNumber = Math.floor(100000 + Math.random() * 900000);
+    console.log(`OTP sent to user: ${OTPNumber}`)
 
     await OTP.create({
         userId: learner?._id,

@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import Logo from '../../components/shared/Logo'
 import { Button } from '../../components/ui/button'
 import { Link, useNavigate } from 'react-router-dom'
-import useSignupFormData from '../../hooks/useSignupFormData.ts'
-import { IsignupFormData } from '../../hooks/useSignupFormData.ts'
+import useSignupForm from '../../hooks/useSignupForm.ts'
+import { IsignupFormData } from '../../hooks/useSignupForm.ts'
 import { signUpService } from "../../services/learner/AuthService.ts"
 import toast, { Toaster } from 'react-hot-toast';
 import isSignUpFormValid from '../../utils/isSignUpFormValid.ts'
@@ -18,7 +18,7 @@ const Signup: React.FC = () => {
         handleChange,
         signupFormError,
         setSignupFormError
-    } = useSignupFormData()
+    } = useSignupForm()
 
     async function handleSubmit(signupFormData: IsignupFormData) {
         setLoading(true)
@@ -30,10 +30,11 @@ const Signup: React.FC = () => {
         const response = await signUpService(signupFormData)
         setLoading(false)
         if (!response.success && response.message) {
-            toast.custom((t) => (
+            return toast.custom((t) => (
                 <ErrorToast message={response.message as string} t={t}></ErrorToast>
             ))
-        } else {
+        }
+        if (response.success) {
             localStorage.setItem("UUI", response.data as string)
             navigate(ROUTE_PATHS.verify)
         }

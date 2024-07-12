@@ -1,5 +1,5 @@
-import { IsignupFormData } from "../hooks/useSignupFormData";
-import { IsignupFormError } from "../hooks/useSignupFormData";
+import { IsignupFormData } from "../hooks/useSignupForm";
+import { IsignupFormError } from "../hooks/useSignupForm";
 
 export default function isSignUpFormValid
     (

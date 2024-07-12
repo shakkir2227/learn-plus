@@ -1,6 +1,8 @@
 import ApiResponse from "../ApiResponse"
 import { ApiError, IApiError } from "../ApiError.ts"
-import { IsignupFormData } from '../../hooks/useSignupFormData.ts'
+import { IsignupFormData } from '../../hooks/useSignupForm.ts'
+import { ILoginFormData } from "../../hooks/useLoginForm.ts"
+import { ILearner } from "../../store/LearnerSlice.ts"
 
 const LEARNER_BASE_URL = "http://localhost:3000/api/v1/learners"
 
@@ -17,7 +19,8 @@ const getRequestOptions = (method: string, body: unknown): RequestInit => {
 
 const makeRequest = async (URL: string, requestOptions?: RequestInit) => {
     try {
-        const response = await fetch(LEARNER_BASE_URL + URL, requestOptions)
+        const response =
+            await fetch(LEARNER_BASE_URL + URL, { ...requestOptions, credentials: "include" })
         const result = await response.json()
         return result
     }
@@ -54,11 +57,18 @@ const verifyEmailService = async (OTP: string, learnerId: string):
     return await makeRequest("/verify-email", requestOptions)
 }
 
+const loginService = async (loginFormData: ILoginFormData):
+    Promise<ApiResponse<ILearner> | IApiError> => {
+    const { email, password } = loginFormData
+    const requestOptions = getRequestOptions("POST", { email, password })
+    return await makeRequest("/login", requestOptions)
+}
 
 
 export {
     signUpService,
-    verifyEmailService
+    verifyEmailService,
+    loginService
 }
 
 

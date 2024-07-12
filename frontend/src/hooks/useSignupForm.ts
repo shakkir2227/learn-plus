@@ -13,7 +13,7 @@ export interface IsignupFormError {
     passwordError: string | null
 }
 
-const useSignupFormData = (): {
+const useSignupForm = (): {
     signupFormData: IsignupFormData,
     handleChange: ((event: React.ChangeEvent<HTMLInputElement>) => void),
     signupFormError: IsignupFormError,
@@ -42,4 +42,4 @@ const useSignupFormData = (): {
     return { signupFormData, handleChange, signupFormError, setSignupFormError }
 }
 
-export default useSignupFormData
+export default useSignupForm

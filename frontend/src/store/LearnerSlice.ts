@@ -1,15 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+export interface ILearner {
+    _id: string,
+    name: string,
+    email: string,
+    coursesEnrolled: Array<unknown>
+}
+
 export interface ILearnerSlice {
     auth: {
         isLoggedIn: boolean
     },
-    learnerDetails?: {
-        _id: string,
-        name: string,
-        email: string,
-        coursesEnrolled: Array<unknown>
-    }
+    learnerDetails?: ILearner
 }
 
 const initialState: ILearnerSlice = {
