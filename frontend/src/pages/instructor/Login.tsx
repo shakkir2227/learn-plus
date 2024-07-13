@@ -44,7 +44,7 @@ const Login: React.FC = () => {
     return (
         <div className="bg-customBg md:h-[1000px] h-[1300px] " >
             <Logo />
-            <div className='md:w-1/3 w-3/4 md:h-[450px] h-[500px]  border-gray-500 border-2 rounded-lg mx-auto mt-8'>
+            <div className='md:w-1/3 w-3/4 md:h-[450px] h-[500px]  border-gray-500 border-2 rounded-lg mx-auto mt-20'>
                 <p className='text-xl font-semibold pt-5 ml-5'>Login </p>
                 <p className='text-xs text-gray-400 px-2 pt-2 ml-3' >Unlock the power of teaching excellence. Login now to manage your courses and inspire your students</p>
                 <form onSubmit={(e) => {
