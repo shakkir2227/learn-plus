@@ -7,7 +7,7 @@ const LoginButton = () => {
     return (
         <div className='mt-5 md:mr-5' >
             <Link to={LEARNER_ROUTE_PATHS.login}>
-                <Button> Login </Button>
+                <Button variant={'ghost'}> Login </Button>
             </Link>
         </div>
     )
