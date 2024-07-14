@@ -52,7 +52,7 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
 
-        customBg: "#FAFAEF", 
+        customBg: "#FAFAEF",
         btnBg: "#BD6B3D",
         customBg2: '#cc785c',
         customBg3: '#f5dba4'
