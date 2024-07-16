@@ -5,7 +5,8 @@ export enum ROUTE_PATHS {
     signup = "/signup",
     login = "/login",
     verify = "/verify",
-    courses="/courses"
+    courses="/courses",
+    courseDetails = "/courses/:id"
 }
 
 export enum LEARNER_ROUTE_PATHS {

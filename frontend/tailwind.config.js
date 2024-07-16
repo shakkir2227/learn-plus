@@ -56,8 +56,9 @@ module.exports = {
         btnBg: "#BD6B3D",
         customBg2: '#cc785c',
         customBg3: '#f5dba4',
-       
-
+        customBg4: "#f4f4e1",
+        customBg5: "#E6F4F0",
+        customBg6: "#f7f9fa"
 
       },
       borderRadius: {
