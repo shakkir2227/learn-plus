@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Logo from '../../components/shared/Logo'
 import { Button } from '../../components/ui/button'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import useLoginForm, { ILoginFormData } from '../../hooks/useLoginForm'
 import toast, { Toaster } from 'react-hot-toast'
 import ErrorToast from '../../components/shared/ErrorToast'
@@ -42,9 +42,9 @@ const Login: React.FC = () => {
     }
 
     return (
-        <div className="bg-customBg md:h-[1000px] h-[1300px] " >
-            <Logo />
-            <div className='md:w-1/3 w-3/4 md:h-[450px] h-[500px]  border-gray-500 border-2 rounded-lg mx-auto mt-20'>
+        <div className="bg-customBg md:h-[1000px] h-[1000px] " >
+            <Logo user='INSTRUCTOR'/>
+            <div className='md:w-1/3 w-3/4 md:h-[480px] h-[500px]  border-gray-500 border-2 rounded-lg mx-auto mt-20'>
                 <p className='text-xl font-semibold pt-5 ml-5'>Login </p>
                 <p className='text-xs text-gray-400 px-2 pt-2 ml-3' >Unlock the power of teaching excellence. Login now to manage your courses and inspire your students</p>
                 <form onSubmit={(e) => {
@@ -76,6 +76,8 @@ const Login: React.FC = () => {
                         <Button type="submit" className="w-11/12 mx-auto" disabled={loading}>
                             Login
                         </Button>
+                        <p className='text-center  mx-2 sm:text-sm text-xs sm:pt-2'>Don't have an account?? <Link to={INSTRUCTOR_ROUTE_PATHS.signup} className='cursor-pointer underline ' > Sign up </Link></p>
+
                     </div>
                 </form>
             </div>

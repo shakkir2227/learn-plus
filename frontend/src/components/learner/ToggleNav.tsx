@@ -16,7 +16,7 @@ const ToggleNav = () => {
     return (
         <div >
             <div className='flex justify-between '>
-                <Logo />
+                <Logo user='LEARNER'/>
                 <AiOutlineMenu onClick={() => setShowNavBar(!showNavBar)} className='mt-8 mr-4 cursor-pointer ' />
             </div>
             {showNavBar &&

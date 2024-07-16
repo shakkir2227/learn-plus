@@ -1,31 +1,34 @@
 import React from 'react'
 import Logo from '../shared/Logo'
-import NavBar from './NavBar'
 import LoginButton from '../shared/LoginButton'
-import ToggleNav from './ToggleNav'
 import { useAppSelector } from '../../store'
 import { FaRegUserCircle } from "react-icons/fa";
 import { PiChatCircleDots } from "react-icons/pi";
 import { Link } from 'react-router-dom'
-import { LEARNER_ROUTE_PATHS } from '../../constants'
+import { INSTRUCTOR_ROUTE_PATHS, LEARNER_ROUTE_PATHS, ROUTE_PATHS } from '../../constants'
+import ToggleNav from './ToggleNav'
+import { Button } from '../ui/button';
 
 const Header = () => {
     const isLoggedIn = useAppSelector((state) => (state.instructor.auth.isLoggedIn))
     return (
         <div>
             <div className="md:flex justify-between  hidden">
-                <Logo />
+                <Logo theme='BLACK' user='INSTRUCTOR' />
                 {isLoggedIn ?
                     <div className='flex p-2 gap-7 items-center mt-5 mr-5'>
-                        <Link to={LEARNER_ROUTE_PATHS.root}>
-                            <PiChatCircleDots size={35} />
+                        <Link to={INSTRUCTOR_ROUTE_PATHS.root}>
+                            <Button variant={'secondary'}>Dashboard</Button>
                         </Link>
-                        <Link to={LEARNER_ROUTE_PATHS.root}>
-                            <FaRegUserCircle size={35} />
+                        <Link to={INSTRUCTOR_ROUTE_PATHS.root}>
+                            <PiChatCircleDots color='white' size={35} />
+                        </Link>
+                        <Link to={INSTRUCTOR_ROUTE_PATHS.root}>
+                            <FaRegUserCircle color='white' size={35} />
                         </Link>
                     </div>
                     :
-                    <LoginButton />
+                    <LoginButton user='INSTRUCTOR' />
                 }
             </div>
             <div className="md:hidden block ">

@@ -40,8 +40,8 @@ const Login: React.FC = () => {
     }
 
     return (
-        <div className="bg-customBg md:h-[1000px] h-[1300px] " >
-            <Logo />
+        <div className="bg-customBg md:h-[1000px] h-[1100px] " >
+            <Logo user='LEARNER' />
             <div className='text-center mt-16'>
                 <span className='md:text-4xl font-serif text-2xl'> Unlock Your Potential <br /> Log In to <span className='font-bold'>Learn Plus</span> </span>
             </div>
@@ -66,7 +66,7 @@ const Login: React.FC = () => {
                         onChange={(e) => handleChange(e)}
                     />
                     <Button className='w-5/6 mx-auto mt-5' disabled={loading} >Log in</Button>
-                    <p className='text-center my-5 mx-2 text-sm'>Don't have an account?? <Link to={"/signup"} className='cursor-pointer underline ' > Sign up </Link></p>
+                    <p className='text-center my-5 mx-2 text-sm'>Don't have an account?? <Link to={LEARNER_ROUTE_PATHS.signup} className='cursor-pointer underline ' > Sign up </Link></p>
                 </form>
             </div>
             <Toaster />

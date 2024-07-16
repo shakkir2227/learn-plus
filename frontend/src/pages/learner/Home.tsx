@@ -21,7 +21,7 @@ const Home = () => {
                 <div className="py-5 relative ">
                     <img className="md:h-full h-[230px]" src="../main-bg-img.jpg" />
                     <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center text-white">
-                        <h2 className="text-2xl font-bold md:ml-0 ml-4"><TextGenerateEffect words={words} /></h2>
+                        <h2 className="text-2xl font-bold md:ml-0 ml-4 text-center"><TextGenerateEffect words={words} /></h2>
                     </div>
                 </div>
                 <div className="md:pt-5 text center">
@@ -46,12 +46,12 @@ const Home = () => {
                     <p className="md:px-10 px-5 py-10  md:text-md text-sm underline font-serif">See All</p>
                 </div>
                 <div className="flex md:flex-row gap-4 flex-col justify-around ">
-                    {[1, 2, 3].map(() => {
-                        return <CourseCard /> // Give courseid as arg
+                    {[1, 2, 3].map((index, value) => {
+                        return <CourseCard  key={value}/> // Give courseid as arg
                     })}
                 </div>
             </div>
-            <div className="bg-customBg3 sm:h-[1050px] h-[1650px]">
+            <div className="bg-customBg3 sm:h-[1050px] h-[1460px]">
                 <p className="text-center sm:text-3xl text-xl  p-10 font-semibold font-serif ">Discover What They're Saying About Us.</p>
                 <div className="mt-5 md:block flex flex-col items-center md:ml-0 ml-8 pr-8">
                     <div className="md:ml-48 sm:w-6/12">

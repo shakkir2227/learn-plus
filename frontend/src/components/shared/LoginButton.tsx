@@ -1,13 +1,17 @@
 import React from 'react'
 import { Button } from '../ui/button'
 import { Link } from 'react-router-dom'
-import { LEARNER_ROUTE_PATHS } from '../../constants'
+import { INSTRUCTOR_ROUTE_PATHS, LEARNER_ROUTE_PATHS, User } from '../../constants'
 
-const LoginButton = () => {
+type Props = {
+    user: User
+}
+
+const LoginButton: React.FC<Props> = ({ user }) => {
     return (
         <div className='mt-5 md:mr-5' >
-            <Link to={LEARNER_ROUTE_PATHS.login}>
-                <Button variant={'ghost'}> Login </Button>
+            <Link to={user === "LEARNER" ? LEARNER_ROUTE_PATHS.login : INSTRUCTOR_ROUTE_PATHS.login}>
+                <Button variant={'secondary'}> Login </Button>
             </Link>
         </div>
     )

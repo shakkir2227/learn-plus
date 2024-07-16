@@ -42,8 +42,8 @@ const Signup: React.FC = () => {
 
     // TODO: create a spinner while loading
     return (
-        <div className="bg-customBg md:h-[1000px] h-[1500px] ">
-            <Logo />
+        <div className="bg-customBg md:h-[1000px] h-[1100px] ">
+            <Logo user='LEARNER' />
             <div className='text-center mt-16'>
                 <span className='md:text-4xl font-serif text-2xl'> Learn something new <br /> with <span className='font-bold'>Learn Plus</span> </span>
             </div>

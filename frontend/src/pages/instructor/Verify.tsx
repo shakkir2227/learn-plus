@@ -40,7 +40,7 @@ const Verify: React.FC = () => {
 
     return (
         <div className="bg-customBg md:h-[1000px] h-[1500px] ">
-            <Logo />
+            <Logo user='INSTRUCTOR' />
             <div className='text-center mt-16 md:w-1/3 mx-auto px-1' >
                 <span className='md:text-sm text-xs text-green-600 font-normal  '>Thank you for signing up! A verification email has been sent to your email address. Please enter the OTP (One-Time Password) here to verify your account </span>
             </div>

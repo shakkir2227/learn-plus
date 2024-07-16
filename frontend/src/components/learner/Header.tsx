@@ -14,7 +14,7 @@ const Header = () => {
     return (
         <div>
             <div className="md:flex justify-between  hidden">
-                <Logo />
+                <Logo user='LEARNER' />
                 <NavBar />
                 {isLoggedIn ?
                     <div className='flex p-2 gap-7 items-center mt-5 mr-5'>
@@ -26,7 +26,7 @@ const Header = () => {
                         </Link>
                     </div>
                     :
-                    <LoginButton />
+                    <LoginButton user='LEARNER' />
                 }
             </div>
             <div className="md:hidden block ">
