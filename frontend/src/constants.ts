@@ -4,7 +4,8 @@ export enum ROUTE_PATHS {
     root = "/",
     signup = "/signup",
     login = "/login",
-    verify = "/verify"
+    verify = "/verify",
+    courses="/courses"
 }
 
 export enum LEARNER_ROUTE_PATHS {
@@ -19,7 +20,8 @@ export enum INSTRUCTOR_ROUTE_PATHS {
     root = "/instructor",
     signup = "/instructor/signup",
     verify = "/instructor/verify",
-    login = "/instructor/login"
+    login = "/instructor/login",
+    courses = "/instructor/courses"
 }
 
 export const LEARNER_BASE_URL = "http://localhost:3000/api/v1/learners"

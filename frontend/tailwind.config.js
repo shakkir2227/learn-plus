@@ -55,7 +55,8 @@ module.exports = {
         customBg: "#FAFAEF",
         btnBg: "#BD6B3D",
         customBg2: '#cc785c',
-        customBg3: '#f5dba4'
+        customBg3: '#f5dba4',
+       
 
 
       },
