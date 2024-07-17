@@ -20,9 +20,9 @@ const LearnerRoutes: React.FC = () => {
         if (!loggedIn) {
             (async function () {
                 const response = await getLoggedInUserService()
+                setLoading(false)
                 if (response.success) {
                     dispatch(login(response.data))
-                    setLoading(false)
                 }
             }())
         }

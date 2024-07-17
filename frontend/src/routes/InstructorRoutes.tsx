@@ -10,6 +10,7 @@ import { login } from "../store/InstructorSlice"
 import { getLoggedInUserService } from "../services/instructor/AuthService"
 import CoursesList from "../pages/instructor/CoursesList"
 import { useEffect, useState } from "react"
+import InstructorDashboard from "../pages/instructor/InstructorDashboard"
 
 
 const InstructorRoutes: React.FC = () => {
@@ -21,16 +22,13 @@ const InstructorRoutes: React.FC = () => {
         if (!loggedIn) {
             (async function () {
                 const response = await getLoggedInUserService()
+                setLoading(false)
                 if (response.success) {
                     dispatch(login(response.data))
-                    setLoading(false)
                 }
             }())
         }
     }, [loggedIn])
-
-
-
 
     return loading ? <>Loading...</> : (
         <Routes>
@@ -42,6 +40,7 @@ const InstructorRoutes: React.FC = () => {
             </Route>
             <Route element={<AuthLayout forLoggedInUsers={true} />}>
                 <Route path={ROUTE_PATHS.courses} element={<CoursesList />} ></Route>
+                <Route path={ROUTE_PATHS.dashboard} element={<InstructorDashboard />} ></Route>
             </Route>
         </Routes >
 
