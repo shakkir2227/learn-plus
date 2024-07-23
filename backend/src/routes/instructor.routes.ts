@@ -3,7 +3,8 @@ import {
     registerInstructor,
     verifyInstructorEmail,
     loginInstructor,
-    getLoggedInInstructor
+    getLoggedInInstructor,
+    resendOTP
 } from "../controllers/instructor.controller";
 import { verifyJWT, verifyPermission } from "../middlewares/auth.middleware";
 
@@ -13,5 +14,6 @@ router.route("/register").post(registerInstructor)
 router.route("/verify-email").post(verifyInstructorEmail)
 router.route("/login").post(loginInstructor)
 router.route("/get-loggedIn-instructor").get(verifyJWT, verifyPermission(["Instructor"]), getLoggedInInstructor)
+router.route("/resend-otp").post(resendOTP)
 
 export default router

@@ -68,12 +68,19 @@ const getLoggedInUserService = async () => {
     return await makeRequest("/get-loggedIn-instructor", requestOptions)
 }
 
+const resendOTPService = async (instructorId: string) => {
+    const requestOptions = getRequestOptions("POST", { instructorId })
+    return await makeRequest("/resend-otp", requestOptions)
+
+}
+
 
 export {
     signUpService,
     verifyEmailService,
     loginService,
-    getLoggedInUserService
+    getLoggedInUserService,
+    resendOTPService
 }
 
 

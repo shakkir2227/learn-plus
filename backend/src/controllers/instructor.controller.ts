@@ -125,6 +125,36 @@ const loginInstructor = asyncHandler(async (req, res, next) => {
 
 })
 
+const resendOTP = asyncHandler(async (req, res, next) => {
+    const { instructorId } = req.body
+    if (!instructorId) return next(new ApiError(500, "Something went wrong while registering the user"))
+
+    const instructor = await Instructor.findById(instructorId)
+    if (!instructor) return next(new ApiError(500, "Something went wrong while registering the user"))
+
+    await OTP.deleteOne({ userId: instructor._id }) // Deleting the OTP if already exists
+
+    let OTPNumber = Math.floor(100000 + Math.random() * 900000);
+    console.log(`OTP sent to user: ${OTPNumber}`)
+
+    await OTP.create({
+        userId: instructor?._id,
+        OTP: OTPNumber,
+    })
+
+    setTimeout(async () => {
+        await OTP.deleteOne({ userId: instructor?._id })
+    }, 60000);
+
+    await sendMail({
+        email: instructor.email,
+        subject: "Please verify your email",
+        mailgenContent: emailVerificationContent(instructor.name, OTPNumber),
+    });
+
+    return res.json(new ApiResponse(200, instructor._id, `Verification Email has been sent`))
+})
+
 const getLoggedInInstructor = asyncHandler(async (req, res, next) => {
     const { user } = req as ICustomRequest
 
@@ -139,5 +169,6 @@ export {
     registerInstructor,
     verifyInstructorEmail,
     loginInstructor,
-    getLoggedInInstructor
+    getLoggedInInstructor,
+    resendOTP
 }

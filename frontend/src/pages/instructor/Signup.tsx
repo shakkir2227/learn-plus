@@ -38,6 +38,7 @@ const Signup: React.FC = () => {
         }
         if (response.success) {
             localStorage.setItem("UII", response.data as string)
+            localStorage.setItem("timer", "60")
             navigate(INSTRUCTOR_ROUTE_PATHS.verify)
         }
     }

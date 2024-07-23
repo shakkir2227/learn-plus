@@ -124,6 +124,36 @@ const loginLearner = asyncHandler(async (req, res, next) => {
 
 })
 
+const resendOTP = asyncHandler(async (req, res, next) => {
+    const { learnerId } = req.body
+    if (!learnerId) return next(new ApiError(500, "Something went wrong while registering the user"))
+
+    const learner = await Learner.findById(learnerId)
+    if (!learner) return next(new ApiError(500, "Something went wrong while registering the user"))
+
+    await OTP.deleteOne({ userId: learner._id }) // Deleting the OTP if already exists
+
+    let OTPNumber = Math.floor(100000 + Math.random() * 900000);
+    console.log(`OTP sent to user: ${OTPNumber}`)
+
+    await OTP.create({
+        userId: learner?._id,
+        OTP: OTPNumber,
+    })
+
+    setTimeout(async () => {
+        await OTP.deleteOne({ userId: learner?._id })
+    }, 60000);
+
+    await sendMail({
+        email: learner.email,
+        subject: "Please verify your email",
+        mailgenContent: emailVerificationContent(learner.name, OTPNumber),
+    });
+
+    return res.json(new ApiResponse(200, learner._id, `Verification Email has been sent`))
+})
+
 const getLoggedInLearner = asyncHandler(async (req, res, next) => {
     const { user } = req as ICustomRequest
 
@@ -138,5 +168,6 @@ export {
     registerLearner,
     verifyLearnerEmail,
     loginLearner,
-    getLoggedInLearner
+    getLoggedInLearner,
+    resendOTP,
 }
