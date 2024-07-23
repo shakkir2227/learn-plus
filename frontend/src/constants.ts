@@ -37,7 +37,7 @@ export const LEARNER_BASE_URL = "http://localhost:3000/api/v1/learners"
 export const INSTRUCTOR_BASE_URL = "http://localhost:3000/api/v1/instructors"
 export const ADMIN_BASE_URL = "http://localhost:3000/api/v1/admin"
 
-export type User = "LEARNER" | "INSTRUCTOR"
+export type User = "LEARNER" | "INSTRUCTOR" | "ADMIN"
 
 export const INSTRUCTOR_FAQ = [
     {
