@@ -3,12 +3,14 @@ import type { TypedUseSelectorHook } from 'react-redux'
 import { useDispatch, useSelector, useStore } from 'react-redux'
 import LearnerSlice from "./LearnerSlice";
 import InstructorSlice from "./InstructorSlice";
+import AdminSlice from "./AdminSlice";
 
 
 const store = configureStore({
     reducer: {
         learner: LearnerSlice.reducer,
-        instructor: InstructorSlice.reducer
+        instructor: InstructorSlice.reducer,
+        admin: AdminSlice.reducer
     }
 })
 

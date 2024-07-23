@@ -10,6 +10,7 @@ import { getLoggedInUserService } from "../services/learner/AuthService"
 import { login } from "../store/LearnerSlice"
 import { useEffect, useState } from "react"
 import CourseDetails from "../pages/learner/CourseDetails"
+import CoursesList from "../pages/learner/CoursesList"
 
 const LearnerRoutes: React.FC = () => {
     const dispatch = useAppDispatch()
@@ -37,8 +38,8 @@ const LearnerRoutes: React.FC = () => {
                 <Route path={ROUTE_PATHS.login} element={<Login />} ></Route>
             </Route>
             <Route element={<AuthLayout forLoggedInUsers={true} />}>
-                <Route path={ROUTE_PATHS.courseDetails} element={<CourseDetails />} ></Route>
-                
+                <Route path={ROUTE_PATHS.courses} element={<CoursesList />} ></Route>
+                <Route path={ROUTE_PATHS.courseDetails} element={<CourseDetails />} ></Route>       
             </Route>
         </Routes>
     )

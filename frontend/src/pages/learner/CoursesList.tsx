@@ -1,5 +1,4 @@
 import React from 'react'
-import Header from '../../components/instructor/Header'
 import Logo from '../../components/shared/Logo'
 import { Link } from 'react-router-dom'
 import { PiChatCircleDots } from 'react-icons/pi'
@@ -14,22 +13,73 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import CourseCard from '../../components/learner/CourseCard'
 import Footer from '../../components/learner/Footer'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '../../components/ui/select'
+import Header from '../../components/learner/Header'
 
 const CoursesList = () => {
     return (
         <>
             <div className='h-full sm:block hidden'>
-                <Header logoTheme='WHITE' iconColor='black' />
-
+                <Header />
                 <div className='mt-3 border-b-2 border-gray-200' > </div>
-                <p className='sm:text-2xl p-2  font-serif mb-10 sm:ml-28 text-center sm:text-start mt-10'>Manage your courses
-                    <br />
-                </p>
 
-                <div >
-                    
+                <div className='flex'>
+                    <div className='w-4/12'>
+                        <div className='pt-10 pl-5' >
+                            <p className='sm:text-3xl  font-semibold font-serif pt-10 pl-6'>All Courses</p>
+                            <p className='pt-10 pl-6 text-xl font-semibold '>Courses to get you started <br /> <span className='text-sm  text-gray-700'>Explore courses from  experts. </span></p>
+                            <div className="flex w-72 max-w-sm items-center space-x-2 mt-10 ml-6">
+                                <Input type="text" placeholder="Course name" />
+                                <Button type="submit">Search</Button>
+                            </div>
+                            <div className='mt-3 border-b-2 border-gray-200 w-72 ml-6' > </div>
+                        </div>
 
-                    <div className=' ml-5 w-8/12  '>
+                        <div className='ml-11'>
+                            <div className='mt-10 flex w-72 justify-between '>
+                                <p className='text-lg font-semibold'>Languages</p>
+                                <MdKeyboardArrowDown className='mt-2' />
+                            </div>
+
+                            <div className='mt-6 flex flex-col gap-4'>
+                                <div className="flex gap-3 ">
+                                    <MdCheckBoxOutlineBlank size={25} className='mt-1' />
+                                    <p>English (1,200)</p>
+                                </div>
+                                <div className="flex gap-3 ">
+                                    <MdCheckBoxOutlineBlank size={25} className='mt-1' />
+                                    <p>Spanish (1,700)</p>
+                                </div>
+                                <div className="flex gap-3 ">
+                                    <MdCheckBoxOutlineBlank size={25} className='mt-1' />
+                                    <p>Chinese (900)</p>
+                                </div>
+                            </div>
+
+                            <div className='mt-10 flex w-72 justify-between '>
+                                <p className='text-lg font-semibold'>Subjects</p>
+                                <MdKeyboardArrowDown className='mt-2' />
+                            </div>
+
+                            <div className='mt-6 flex flex-col gap-4'>
+                                <div className="flex gap-3  ">
+                                    <MdCheckBoxOutlineBlank size={25} className='mt-1' />
+                                    <p>Chemistry (1,200)</p>
+                                </div>
+                                <div className="flex gap-3  ">
+                                    <MdCheckBoxOutlineBlank size={25} className='mt-1' />
+                                    <p>Computer science (1,700)</p>
+                                </div>
+                                <div className="flex gap-3  ">
+                                    <MdCheckBoxOutlineBlank size={25} className='mt-1' />
+                                    <p>Chinese (900)</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div className='mt-24 ml-5 w-8/12  '>
                         <div className='flex '>
                             <div></div>
                             <div className='text-xl text-gray-700 py-5 ml-2 mt-10  font-bold'>130 results</div>
@@ -55,7 +105,7 @@ const CoursesList = () => {
             </div>
 
             <div className=' min-h-[3480px]  sm:hidden '>
-                <DashBoardHeader logoTheme='WHITE' iconColor='black' />
+                <DashBoardHeader />
                 <div className='mt-3 border-b-2 border-gray-200' > </div>
 
                 <div className=''>

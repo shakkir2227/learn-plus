@@ -19,11 +19,13 @@ app.use(cookieParser())
 // Routes
 import learnerRouter from "./routes/learner.routes"
 import instructorRouter from "./routes/instructor.routes"
+import adminRouter from "./routes/admin.routes"
 import errorHandler from './middlewares/error.middleware'
 
 // Route declaration
 app.use(`${BASE_URL}/learners`, learnerRouter)
 app.use(`${BASE_URL}/instructors`, instructorRouter)
+app.use(`${BASE_URL}/admin`, adminRouter)
 
 app.use(errorHandler)
 

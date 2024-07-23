@@ -1,13 +1,14 @@
 export enum ROUTE_PATHS {
     learner = "/*",
     instructor = "/instructor/*",
+    admin = "/admin/*",
     root = "/",
     signup = "/signup",
     login = "/login",
     verify = "/verify",
-    courses="/courses",
+    courses = "/courses",
     courseDetails = "/courses/:id",
-    dashboard="/dashboard"
+    dashboard = "/dashboard"
 }
 
 export enum LEARNER_ROUTE_PATHS {
@@ -23,13 +24,20 @@ export enum INSTRUCTOR_ROUTE_PATHS {
     signup = "/instructor/signup",
     verify = "/instructor/verify",
     login = "/instructor/login",
-    courses = "/instructor/courses"
+    courses = "/instructor/courses",
+    dashboard = "/instructor/dashboard"
+}
+
+export enum ADMIN_ROUTE_PATHS {
+    root = "/admin",
+    login = "/admin/login",
 }
 
 export const LEARNER_BASE_URL = "http://localhost:3000/api/v1/learners"
 export const INSTRUCTOR_BASE_URL = "http://localhost:3000/api/v1/instructors"
+export const ADMIN_BASE_URL = "http://localhost:3000/api/v1/admin"
 
-export type User =  "LEARNER" | "INSTRUCTOR"
+export type User = "LEARNER" | "INSTRUCTOR"
 
 export const INSTRUCTOR_FAQ = [
     {

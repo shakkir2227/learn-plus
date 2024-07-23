@@ -5,13 +5,13 @@ import {
     loginInstructor,
     getLoggedInInstructor
 } from "../controllers/instructor.controller";
-import { verifyJWT } from "../middlewares/auth.middleware";
+import { verifyJWT, verifyPermission } from "../middlewares/auth.middleware";
 
 const router = Router()
 
 router.route("/register").post(registerInstructor)
 router.route("/verify-email").post(verifyInstructorEmail)
 router.route("/login").post(loginInstructor)
-router.route("/get-loggedIn-instructor").get(verifyJWT, getLoggedInInstructor)
+router.route("/get-loggedIn-instructor").get(verifyJWT, verifyPermission(["Instructor"]), getLoggedInInstructor)
 
 export default router

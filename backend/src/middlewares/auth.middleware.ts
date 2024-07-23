@@ -4,6 +4,7 @@ import { Document } from "mongoose";
 import { NextFunction, Request, Response } from "express"
 import ApiError from "../utils/ApiError"
 import { Instructor } from "../models/instructor.model";
+import asyncHandler from "../utils/asyncHandler";
 
 export interface ITokens {
     accessToken: string
@@ -110,5 +111,16 @@ export const getAccessTokenAndRefreshToken = async (user: IUser, next: NextFunct
     }
 }
 
+
+export const verifyPermission = (roles: IUser["role"][]) => {
+    return asyncHandler(async (req, res, next) => {
+        if (!req.user) return next(new ApiError(401, "You need to be logged in to access this feature. Please log in to continue."))
+
+        if (!roles.includes(req.user.role)) return next(new ApiError(401, "You need to be logged in to access this feature. Please log in to continue."))
+
+        next()
+
+    })
+}
 
 

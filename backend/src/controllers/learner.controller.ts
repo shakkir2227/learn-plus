@@ -95,7 +95,7 @@ const loginLearner = asyncHandler(async (req, res, next) => {
     const { error } = userLoginValidatorSchema.validate(loginDetails)
     if (error) return next(new ApiError(422, "Please check your input and try again."))
 
-    const learner = await Learner.findOne({ email: loginDetails.email, isVerified: true })
+    const learner = await Learner.findOne({ email: loginDetails.email, isVerified: true, isAdmin: false })
     if (!learner) return next(new ApiError(401, "The email address or password you entered does not match our records."))
 
     if (learner.isBlocked) return next(new ApiError(403, "Your account has been blocked. Please contact support for more information"))

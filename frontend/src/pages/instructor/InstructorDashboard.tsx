@@ -20,6 +20,9 @@ import {
     PaginationPrevious,
 } from "../../components/ui/pagination"
 import Footer from '../../components/learner/Footer'
+import { Button } from '../../components/ui/button'
+import { Link } from 'react-router-dom'
+import { INSTRUCTOR_ROUTE_PATHS } from '../../constants'
 
 const InstructorDashboard = () => {
 
@@ -47,7 +50,7 @@ const InstructorDashboard = () => {
 
     return (
         <div className='min-h-[2850px] sm:min-h-[2200px]  '>
-            <DashBoardHeader />
+            <Header logoTheme='WHITE' iconColor='black' />
             <div className='bg-black'>
                 <Separator className="my-5" />
                 <div className="flex  h-5 items-center space-x-4 text-sm sm:justify-center  sm:font-semibold ">
@@ -60,10 +63,13 @@ const InstructorDashboard = () => {
                 <Separator className="my-4" />
             </div>
             <div className='sm:mt-20 mt-5'>
-                <p className='sm:text-2xl p-2  font-serif mb-10 sm:ml-28 text-center sm:text-start'>Track your performance
-                    <br />
-                    <span className=' text-sm  text-gray-400 '>Past Month </span>
-                </p>
+                <div className='flex justify-between w-11/12'>
+                    <p className='sm:text-2xl p-2  font-serif mb-10 sm:ml-28 text-center sm:text-start'>Track your performance
+                        <br />
+                        <span className=' text-sm  text-gray-400 '>Past Month </span>
+                    </p>
+                    <Link to={INSTRUCTOR_ROUTE_PATHS.courses} >  <Button className='mr-6 mt-3'> Manage courses </Button> </Link>
+                </div>
                 <div className='flex sm:flex-row flex-col items-center justify-center gap-5'>
                     <div className="bg-customBg4 flex flex-col justify-center items-center gap-2 md:w-3/12 w-4/6 md:mx-0 mx-auto md:h-52 rounded-2xl hover:opacity-70 cursor-pointer">
                         <p className="font-semibold p-5 font-serif sm:text-start text-center "> <span className='font-mono bg-green-300 rounded-sm p-2'>120</span> Students Enrolled <br></br>

@@ -12,7 +12,7 @@ const Home = () => {
 	return (
 	<div className="bg-black sm:h-[2100px] h-[2850px]">
 
-			<Header logoTheme="BLACK" />
+			<Header logoTheme="BLACK" iconColor="white"/>
 
 			<div className="flex sm:flex-row flex-col items-center justify-between sm:my-24 my-16">
 				<div className="sm:text-4xl text-xl font-bold ml-16 sm:mb-0 mb-10 text-white">Join the Teaching <br /> Revolution

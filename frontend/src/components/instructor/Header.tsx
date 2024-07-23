@@ -10,25 +10,28 @@ import ToggleNav from './ToggleNav'
 import { Button } from '../ui/button';
 
 type Props = {
-    logoTheme: "WHITE" | "BLACK"
+    logoTheme: "WHITE" | "BLACK",
+    iconColor: "white" | "black"
 }
 
-const Header: React.FC<Props> = ({ logoTheme }) => {
+const Header: React.FC<Props> = ({ logoTheme, iconColor }) => {
     const isLoggedIn = useAppSelector((state) => (state.instructor.auth.isLoggedIn))
+    const variant = logoTheme === "WHITE" ? "default" : "secondary"
+
     return (
         <div>
             <div className="md:flex justify-between  hidden">
                 <Logo theme={logoTheme} user='INSTRUCTOR' />
                 {isLoggedIn ?
                     <div className='flex p-2 gap-7 items-center mt-5 mr-5'>
-                        <Link to={INSTRUCTOR_ROUTE_PATHS.courses}>
-                            <Button variant={'secondary'}>Dashboard</Button>
+                        <Link to={INSTRUCTOR_ROUTE_PATHS.dashboard}>
+                            <Button variant={variant}>Dashboard</Button>
                         </Link>
                         <Link to={INSTRUCTOR_ROUTE_PATHS.root}>
-                            <PiChatCircleDots color='white' size={35} />
+                            <PiChatCircleDots color={iconColor} size={35} />
                         </Link>
                         <Link to={INSTRUCTOR_ROUTE_PATHS.root}>
-                            <FaRegUserCircle color='white' size={35} />
+                            <FaRegUserCircle color={iconColor} size={35} />
                         </Link>
                     </div>
                     :
@@ -36,7 +39,7 @@ const Header: React.FC<Props> = ({ logoTheme }) => {
                 }
             </div>
             <div className="md:hidden block ">
-                <ToggleNav />
+                <ToggleNav logoTheme={logoTheme} iconColor={iconColor} />
             </div>
         </div>
     )
