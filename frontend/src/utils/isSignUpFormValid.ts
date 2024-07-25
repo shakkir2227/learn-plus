@@ -17,7 +17,7 @@ export default function isSignUpFormValid
         signupFormErrorCopy = { ...signupFormErrorCopy, ["emailError"]: "Please enter a valid email address." }
 
     }
-    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password)) {
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,30}$/.test(password)) {
         signupFormErrorCopy = { ...signupFormErrorCopy, ["passwordError"]: "Password must contain at least one lowercase letter, one uppercase letter, one digit, and be between 8 and 30 characters long." }
     }
 

@@ -164,10 +164,44 @@ const getLoggedInLearner = asyncHandler(async (req, res, next) => {
     return res.json(new ApiResponse(200, learner, "User data fetched Successfully"))
 })
 
+const updateProfile = asyncHandler(async (req, res, next) => {
+    const { name } = req.body
+    if (!/^[A-Za-z][A-Za-z\s]{1,28}$/.test(name)) return next(new ApiError(400, "Validation error: Please check your input and try again."))
+
+    if (req.user) {
+        await Learner.findOneAndUpdate({ _id: req.user._id },
+            { $set: { name: name } })
+
+        const updatedLearner = await Learner.findById({ _id: req.user._id }, {
+            name: 1, email: 1, coursesEnrolled: 1,
+        })
+        return res.json(new ApiResponse(200, { learner: updatedLearner }, "Your profile has been updated successfully!"))
+    }
+})
+
+const updatePassword = asyncHandler(async (req, res, next) => {
+    const { oldPassword, newPassword } = req.body
+    if (!oldPassword || !newPassword) return
+    if (!req.user) return
+
+    const learner = await Learner.findById(req.user._id)
+    if (!learner) return
+    if (!await isPasswordCorrect(oldPassword, learner.password)) {
+        return next(new ApiError(400, "The password you entered does not match our records."))
+    }
+
+    learner.password = newPassword
+    await learner.save()
+
+    return res.json(new ApiResponse(200, {}, "Password updated successfully."))
+})
+
 export {
     registerLearner,
     verifyLearnerEmail,
     loginLearner,
     getLoggedInLearner,
     resendOTP,
+    updateProfile,
+    updatePassword
 }

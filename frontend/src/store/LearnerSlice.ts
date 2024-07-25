@@ -27,9 +27,12 @@ const LearnerSlice = createSlice({
         login: (state, { payload }) => {
             state.auth.isLoggedIn = true
             state.learnerDetails = payload
-        }
+        },
+        updateProfile: (state, { payload }) => {
+            state.learnerDetails = payload.learner
+        },
     }
 })
 
-export const { login } = LearnerSlice.actions
+export const { login, updateProfile } = LearnerSlice.actions
 export default LearnerSlice
