@@ -11,6 +11,8 @@ import { login } from "../store/LearnerSlice"
 import { useEffect, useState } from "react"
 import CourseDetails from "../pages/learner/CourseDetails"
 import CoursesList from "../pages/learner/CoursesList"
+import Profile from "../pages/learner/Account"
+import Account from "../pages/learner/Account"
 
 const LearnerRoutes: React.FC = () => {
     const dispatch = useAppDispatch()
@@ -40,6 +42,7 @@ const LearnerRoutes: React.FC = () => {
             <Route element={<AuthLayout forLoggedInUsers={true} />}>
                 <Route path={ROUTE_PATHS.courses} element={<CoursesList />} ></Route>
                 <Route path={ROUTE_PATHS.courseDetails} element={<CourseDetails />} ></Route>       
+                <Route path={ROUTE_PATHS.account} element={<Account />} ></Route>       
             </Route>
         </Routes>
     )

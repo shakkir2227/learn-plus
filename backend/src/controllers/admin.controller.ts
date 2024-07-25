@@ -1,4 +1,5 @@
 import { getAccessTokenAndRefreshToken, ITokens, IUser } from "../middlewares/auth.middleware"
+import { Instructor } from "../models/instructor.model"
 import { isPasswordCorrect, Learner } from "../models/learner.model"
 import ApiError from "../utils/ApiError"
 import ApiResponse from "../utils/ApiResponse"
@@ -56,7 +57,74 @@ const getLoggedInAdmin = asyncHandler(async (req, res, next) => {
     return res.json(new ApiResponse(200, admin, "User data fetched Successfully"))
 })
 
+const getAllUsers = asyncHandler(async (req, res, next) => {
+
+    const allLearners = await Learner.aggregate([
+        {
+            $match: {
+                isVerified: true,
+                isAdmin: false
+            }
+        },
+        {
+            $project: {
+                name: 1,
+                email: 1,
+                isBlocked: 1
+            }
+        }
+    ])
+
+    const allInstructors = await Instructor.aggregate([
+        {
+            $match: {
+                isVerified: true
+            }
+        },
+        {
+            $project: {
+                name: 1,
+                email: 1,
+                isBlocked: 1
+            }
+        }
+    ])
+
+    return res.json(new ApiResponse(200, { learners: allLearners, instructors: allInstructors }))
+})
+
+const blockOrUnblockLearner = asyncHandler(async (req, res, next) => {
+    const { id } = req.body
+    if (!id) return
+
+    const learner = await Learner.findOne({ _id: id }, { name: 1, email: 1, isBlocked: 1 })
+    if (!learner) return
+
+    learner.isBlocked = !learner.isBlocked
+    await learner.save()
+
+    return res.json(new ApiResponse(200, { learner }))
+
+})
+
+const blockOrUnblockInstructor = asyncHandler(async (req, res, next) => {
+    const { id } = req.body
+    if (!id) return
+
+    const instructor = await Instructor.findOne({ _id: id }, { name: 1, email: 1, isBlocked: 1 })
+    if (!instructor) return
+
+    instructor.isBlocked = !instructor.isBlocked
+    await instructor.save()
+
+    return res.json(new ApiResponse(200, { instructor }))
+
+})
+
 export {
     loginAdmin,
-    getLoggedInAdmin
+    getLoggedInAdmin,
+    getAllUsers,
+    blockOrUnblockLearner,
+    blockOrUnblockInstructor
 }

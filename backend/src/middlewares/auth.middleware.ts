@@ -21,7 +21,8 @@ export interface IUser extends Document {
     name: string,
     email: string,
     refreshToken: string,
-    role: "Learner" | "Instructor" | "Admin"
+    role: "Learner" | "Instructor" | "Admin",
+    isBlocked: boolean
 }
 
 export interface ICustomRequest extends Request {
@@ -115,8 +116,11 @@ export const getAccessTokenAndRefreshToken = async (user: IUser, next: NextFunct
 export const verifyPermission = (roles: IUser["role"][]) => {
     return asyncHandler(async (req, res, next) => {
         if (!req.user) return next(new ApiError(401, "You need to be logged in to access this feature. Please log in to continue."))
-
+            
         if (!roles.includes(req.user.role)) return next(new ApiError(401, "You need to be logged in to access this feature. Please log in to continue."))
+
+        if (req.user?.isBlocked) return next(new ApiError(401, `You have been blocked from accessing this feature.Please contact support for further assistance.`))
+
 
         next()
 

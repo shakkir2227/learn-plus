@@ -21,7 +21,7 @@ const Header = () => {
                         <Link to={LEARNER_ROUTE_PATHS.root}>
                             <PiChatCircleDots size={35} />
                         </Link>
-                        <Link to={LEARNER_ROUTE_PATHS.root}>
+                        <Link to={LEARNER_ROUTE_PATHS.account}>
                             <FaRegUserCircle size={35} />
                         </Link>
                     </div>
