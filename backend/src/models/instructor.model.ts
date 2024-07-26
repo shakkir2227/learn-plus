@@ -4,6 +4,8 @@ import bcrypt from "bcrypt"
 export interface IInstructor extends Document {
     name: string,
     email: string,
+    bio: string,
+    profilePicture: string,
     password: string,
     role: string,
     refreshToken: string,
@@ -21,6 +23,12 @@ const instructorSchema = new Schema({
     email: {
         type: String,
         required: true,
+    },
+    bio: {
+        type: String
+    },
+    profilePicture: {
+        type: String
     },
     password: {
         type: String,

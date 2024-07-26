@@ -11,6 +11,7 @@ import { getLoggedInUserService } from "../services/instructor/AuthService"
 import CoursesList from "../pages/instructor/CoursesList"
 import { useEffect, useState } from "react"
 import InstructorDashboard from "../pages/instructor/InstructorDashboard"
+import Account from "../pages/instructor/Account"
 
 
 const InstructorRoutes: React.FC = () => {
@@ -41,6 +42,7 @@ const InstructorRoutes: React.FC = () => {
             <Route element={<AuthLayout forLoggedInUsers={true} />}>
                 <Route path={ROUTE_PATHS.courses} element={<CoursesList />} ></Route>
                 <Route path={ROUTE_PATHS.dashboard} element={<InstructorDashboard />} ></Route>
+                <Route path={ROUTE_PATHS.account} element={<Account />} ></Route>
             </Route>
         </Routes >
 

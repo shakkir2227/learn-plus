@@ -1,4 +1,4 @@
-import React, { CSSProperties, useEffect, useState } from 'react'
+import React, { CSSProperties, useEffect, useRef, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../../components/ui/card'
 import { Label } from '../../components/ui/label'
@@ -8,20 +8,32 @@ import { useAppDispatch, useAppSelector } from '../../store'
 import { IoEye } from "react-icons/io5";
 import { LuEye } from "react-icons/lu";
 import { LuEyeOff } from "react-icons/lu";
-import { updatePasswordService, updateProfileService } from '../../services/learner/ProfileService'
 import toast, { Toaster } from 'react-hot-toast'
-import { updateProfile } from '../../store/LearnerSlice'
 import { useDispatch } from 'react-redux'
 import HashLoader from 'react-spinners/HashLoader'
 import { validatePasswords } from '../../utils/validatePasswords'
 import ToastSuccess from '../../components/shared/ToastSuccess'
 import ToastError from '../../components/shared/ToastError'
-
+import { Textarea } from '../../components/ui/textarea'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '../../components/ui/dropdown-menu'
+import { LogOut, Settings } from 'lucide-react'
+import { updatePasswordService, updateProfileService } from '../../services/instructor/ProfileService'
+import { IInstructor, updateProfile } from '../../store/InstructorSlice'
 
 const Profile = () => {
-    const learnerDetails = useAppSelector((state) => (state.learner.learnerDetails))
-    const [name, setName] = useState<string>("")
+    const { name: instructorName, email, profilePicture, bio: instructorBio } =
+        useAppSelector((state) => state.instructor.instructorDetails) as IInstructor;
+
+    const [name, setName] = useState<string>(instructorName)
     const [nameError, setNameError] = useState<string>("")
+    const [image, setImage] = useState<string | null>(profilePicture)
+    const [bio, setBio] = useState<string>(instructorBio)
+    const [bioError, setBioError] = useState<string>("")
+    const [imageFile, setImageFile] = useState<File | null>(null)
+    const [imageRemoved, setImageRemoved] = useState<string>("false")
+    const imageInputRef = useRef<HTMLInputElement | null>(null);
+    const [loading, setLoading] = useState<boolean>(false)
+
     const [oldPasswordError, setOldPasswordError] = useState<string>("")
     const [newPasswordError, setNewPasswordError] = useState<string>("")
     const [oldPassword, setOldPassword] = useState<string>("")
@@ -29,7 +41,7 @@ const Profile = () => {
     const [showOldPassword, setShowOldPassword] = useState<boolean>(false)
     const [showNewPassword, setShowNewPassword] = useState<boolean>(false)
     const dispatch = useAppDispatch()
-    const [loading, setLoading] = useState<boolean>(false)
+
 
     const override: CSSProperties = {
         display: "block",
@@ -39,21 +51,34 @@ const Profile = () => {
     };
 
     const updateProfileDetails = async () => {
-        setNameError("")
-        if (name === learnerDetails?.name) return
         setLoading(true)
+        setNameError("")
+        setBioError("")
         if (!/^[A-Za-z][A-Za-z\s]{1,28}$/.test(name)) {
             setNameError("Name should only include alphabetic characters.")
             setLoading(false)
             return
         }
-        const response = await updateProfileService(name)
+        if (!/^[\w\s\., !?'"-]{1,200}$/.test(bio)) {
+            setBioError("Bio: 1-200 characters, letters, numbers, and punctuation allowed.")
+            setLoading(false)
+            return
+        }
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('bio', bio);
+        formData.append('imageRemoved', imageRemoved);
+        if (imageFile) {
+            formData.append('profilePicture', imageFile);
+        }
+
+        const response = await updateProfileService(formData)
         if (!response) setLoading(false)
         if (!response.success && response.message) {
             setTimeout(() => {
                 setLoading(false)
                 toast.custom((t) => (
-                    <ToastError t={t} message={response.message as string} />
+                    <ToastError t={t} message={response.message} />
                 ), {
                     duration: 2000, // Auto dismiss after 2 seconds
                 });
@@ -64,7 +89,7 @@ const Profile = () => {
                 dispatch(updateProfile(response.data))
                 setLoading(false)
                 return toast.custom((t) => (
-                    <ToastSuccess message={response.message as string} t={t} />
+                    <ToastSuccess message={response.message} t={t} />
                 ), {
                     duration: 2000, // Auto dismiss after 2 seconds
                 })
@@ -108,26 +133,49 @@ const Profile = () => {
         }
     }
 
-    useEffect(() => {
-        if (learnerDetails && learnerDetails.name) {
-            setName(learnerDetails.name)
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target?.files?.[0]
+        if (file && !file.type.startsWith('image/')) {
+            return toast.custom((t) => (
+                <ToastError t={t} message={"Please upload a file with an image format (e.g., .jpg, .png)."} />
+            ), {
+                duration: 2000, // Auto dismiss after 2 seconds
+            });
         }
-    }, [])
+        if (file && file.type.startsWith('image/')) {
+            setImageFile(file)
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                if (e.target?.result) {
+                    setImage(e.target?.result as string);
+                }
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
+    const handleRemoveImage = () => {
+        setImage(null)
+        setImageFile(null)
+        setImageRemoved("true")
+        if (imageInputRef.current) {
+            imageInputRef.current.value = ""; // Removing browser cache.
+        }
+    }
+
+    useEffect(() => {
+        if (!image) setImage("/user-2.jpg")
+    }, [image])
 
     return (
         <div>
-            <p className='text-xl font-semibold tracking-tight-'>Profile</p>
-            <p className="text-muted-foreground text-sm">
-                Update your name and password for enhanced security and personalization.
-            </p>
-            <hr className='my-5'></hr>
             <Tabs defaultValue="account" className=''>
                 <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger value="account">Account details</TabsTrigger>
                     <TabsTrigger value="password">Password</TabsTrigger>
                 </TabsList>
-                <TabsContent value="account">
-                    <Card>
+                <TabsContent value="account" className=''>
+                    <Card className='w-[700px]'>
                         <CardHeader>
                             <CardTitle>Account details</CardTitle>
                             <CardDescription>
@@ -135,14 +183,37 @@ const Profile = () => {
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-2">
-                            <div className="space-y-1">
-                                <Label htmlFor="username">Email</Label>
-                                <Input id="username" defaultValue={learnerDetails?.email} disabled />
+                            <div className='mx-auto mt-3 mb-7'>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <img className=' mx-auto w-24 h-24 rounded-full object-cover border-2 border-gray-300' src={`${image}`}  ></img>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent className="w-56">
+                                        <DropdownMenuGroup>
+                                            <DropdownMenuItem>
+                                                <Settings className="mr-2  h-4 w-4" />
+                                                <span onClick={() => { imageInputRef.current?.click() }}>Change Photo</span>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem>
+                                                <Settings className="mr-2 h-4 w-4" />
+                                                <span onClick={handleRemoveImage}>Remove Photo</span>
+                                            </DropdownMenuItem>
+                                        </DropdownMenuGroup>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+
+                                <p className='text-center text-sm '>{email}</p>
+                                <input onChange={(e) => handleImageChange(e)} type='file' accept="image/*" ref={imageInputRef} hidden></input>
                             </div>
-                            <div className="space-y-1">
+                            <div className="space-y-2 ">
                                 <Label htmlFor="name">Name</Label>
                                 <Input id="name" value={name} onChange={(e) => { setName(e.target.value) }} />
                                 <p className='text-xs mb-1 text-red-600 '>{nameError} </p>
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="username">About You</Label>
+                                <Textarea value={bio} onChange={(e) => setBio(e.target.value)} placeholder="Tell us a little bit about yourself" />
+                                <p className='text-xs mb-1 text-red-600 '>{bioError} </p>
                             </div>
                         </CardContent>
                         <CardFooter>
@@ -159,7 +230,7 @@ const Profile = () => {
                     </Card>
                 </TabsContent>
                 <TabsContent value="password">
-                    <Card>
+                    <Card className='w-[700px]'>
                         <CardHeader>
                             <CardTitle>Password</CardTitle>
                             <CardDescription>
@@ -198,7 +269,7 @@ const Profile = () => {
                                 size={30}
                                 aria-label="Loading Spinner"
                                 data-testid="loader" /> :
-                                <Button onClick={() => updatePassword(oldPassword, newPassword)}>Save password</Button>
+                                <Button onClick={() => updatePassword(oldPassword, newPassword)} >Save password</Button>
                             }
                         </CardFooter>
                     </Card>

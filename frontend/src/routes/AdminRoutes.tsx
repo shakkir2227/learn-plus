@@ -7,6 +7,7 @@ import { getLoggedInUserService } from "../services/admin/AuthService"
 import { login } from "../store/AdminSlice"
 import AuthLayout from "../components/admin/AuthLayout"
 import Home from "../pages/admin/Home"
+import Account from "../pages/instructor/Account"
 
 
 const AdminRoutes: React.FC = () => {

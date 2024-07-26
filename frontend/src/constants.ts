@@ -29,8 +29,9 @@ export enum INSTRUCTOR_ROUTE_PATHS {
     signup = "/instructor/signup",
     verify = "/instructor/verify",
     login = "/instructor/login",
+    account = "/instructor/account",
     courses = "/instructor/courses",
-    dashboard = "/instructor/dashboard"
+    dashboard = "/instructor/dashboard",
 }
 
 export enum ADMIN_ROUTE_PATHS {

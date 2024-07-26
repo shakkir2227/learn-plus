@@ -2,11 +2,11 @@ import React, { useEffect } from 'react'
 import toast, { Toast } from 'react-hot-toast'
 
 type Props = {
-    response: any,
+    message: string,
     t: Toast
 }
 
-const ToastSuccess: React.FC<Props> = ({ response, t }) => {
+const ToastSuccess: React.FC<Props> = ({ message, t }) => {
 
     return (
         <div
@@ -25,7 +25,7 @@ const ToastSuccess: React.FC<Props> = ({ response, t }) => {
                             Profile Update
                         </p>
                         <p className="mt-1 text-sm text-gray-500">
-                            {response.message}
+                            {message}
                         </p>
                     </div>
                 </div>

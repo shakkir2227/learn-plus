@@ -37,7 +37,7 @@ export const verifyJWT = async (req: Request, res: Response, next: NextFunction)
         const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET as string) as IJWTPayload
         const user = (decoded.role === "Learner" || decoded.role === "Admin")
             ? await Learner.findById(decoded._id) as IUser
-            : await Instructor.findById(decoded._id) as IUser// TODO: Change this!! Create instructor model. 
+            : await Instructor.findById(decoded._id) as IUser 
 
         req.user = user
         next()
