@@ -18,7 +18,7 @@ export interface IAdminSlice {
     auth: {
         isLoggedIn: boolean
     },
-    adminDetails?: IAdmin
+    adminDetails: IAdmin | null
     allLearners?: IUser[]
     allInstructors?: IUser[]
 }
@@ -27,6 +27,7 @@ const initialState: IAdminSlice = {
     auth: {
         isLoggedIn: false
     },
+    adminDetails: null
 }
 
 const AdminSlice = createSlice({
@@ -36,6 +37,10 @@ const AdminSlice = createSlice({
         login: (state, { payload }) => {
             state.auth.isLoggedIn = true
             state.adminDetails = payload
+        },
+        logout: (state) => {
+            state.auth.isLoggedIn = false
+            state.adminDetails = null
         },
         loadLearners: (state, { payload }) => {
             state.allLearners = payload
@@ -58,5 +63,5 @@ const AdminSlice = createSlice({
     }
 })
 
-export const { login, loadLearners, loadInstructors, updateLearners, updateInstructors } = AdminSlice.actions
+export const { login, logout, loadLearners, loadInstructors, updateLearners, updateInstructors } = AdminSlice.actions
 export default AdminSlice

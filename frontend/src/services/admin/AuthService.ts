@@ -44,10 +44,16 @@ const getLoggedInUserService = async () => {
     return await makeRequest("/get-loggedIn-admin", requestOptions)
 }
 
+const logoutService = async ():
+    Promise<ApiResponse<string> | IApiError> => {
+    const requestOptions = getRequestOptions("POST")
+    return await makeRequest("/logout", requestOptions)
+}
 
 export {
     loginService,
-    getLoggedInUserService
+    getLoggedInUserService,
+    logoutService
 }
 
 

@@ -1,10 +1,10 @@
 import React from 'react'
 import Logo from '../shared/Logo'
 import LoginButton from '../shared/LoginButton'
-import { useAppSelector } from '../../store'
+import { useAppDispatch, useAppSelector } from '../../store'
 import { FaRegUserCircle } from "react-icons/fa";
 import { PiChatCircleDots } from "react-icons/pi";
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { INSTRUCTOR_ROUTE_PATHS, LEARNER_ROUTE_PATHS, ROUTE_PATHS } from '../../constants'
 import {
     Cloud,
@@ -39,6 +39,10 @@ import {
     DropdownMenuTrigger,
 } from '../ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { logoutService } from '../../services/admin/AuthService';
+import toast from 'react-hot-toast';
+import ToastError from '../shared/ToastError';
+import { logout } from '../../store/AdminSlice';
 
 type Props = {
     logoTheme: "WHITE" | "BLACK",
@@ -48,6 +52,23 @@ type Props = {
 const Header: React.FC<Props> = ({ logoTheme, iconColor }) => {
     const isLoggedIn = useAppSelector((state) => (state.instructor.auth.isLoggedIn))
     const variant = logoTheme === "WHITE" ? "default" : "secondary"
+    const navigate = useNavigate()
+    const dispatch = useAppDispatch()
+
+    const handleLogout = async () => {
+        const response = await logoutService()
+        if (!response.success) {
+            toast.custom((t) => (
+                <ToastError t={t} message={response.message as string} />
+            ), {
+                duration: 2000, // Auto dismiss after 2 seconds
+            });
+        }
+        if (response.success) {
+            dispatch(logout())
+            navigate(LEARNER_ROUTE_PATHS.login)
+        }
+    }
 
     return (
         <div>
@@ -58,7 +79,7 @@ const Header: React.FC<Props> = ({ logoTheme, iconColor }) => {
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                                 <Avatar className="h-8 w-8">
-                                    <AvatarImage src="/user-1.jpg" alt="profile image" />
+                                    <AvatarImage src="/user-2.jpg" alt="profile image" />
                                     <AvatarFallback>SC</AvatarFallback>
                                 </Avatar>
                             </Button>
@@ -76,7 +97,7 @@ const Header: React.FC<Props> = ({ logoTheme, iconColor }) => {
                             <DropdownMenuGroup>
 
                             </DropdownMenuGroup>
-                            <DropdownMenuItem>
+                            <DropdownMenuItem onClick={handleLogout}>
                                 Log out
                             </DropdownMenuItem>
                         </DropdownMenuContent>

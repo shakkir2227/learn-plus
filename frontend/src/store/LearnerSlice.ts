@@ -11,13 +11,14 @@ export interface ILearnerSlice {
     auth: {
         isLoggedIn: boolean
     },
-    learnerDetails?: ILearner
+    learnerDetails: ILearner | null
 }
 
 const initialState: ILearnerSlice = {
     auth: {
         isLoggedIn: false
     },
+    learnerDetails: null
 }
 
 const LearnerSlice = createSlice({
@@ -28,11 +29,15 @@ const LearnerSlice = createSlice({
             state.auth.isLoggedIn = true
             state.learnerDetails = payload
         },
+        logout: (state) => {
+            state.auth.isLoggedIn = false
+            state.learnerDetails = null
+        },
         updateProfile: (state, { payload }) => {
             state.learnerDetails = payload.learner
         },
     }
 })
 
-export const { login, updateProfile } = LearnerSlice.actions
+export const { login, logout, updateProfile } = LearnerSlice.actions
 export default LearnerSlice

@@ -119,8 +119,7 @@ export const verifyPermission = (roles: IUser["role"][]) => {
             
         if (!roles.includes(req.user.role)) return next(new ApiError(401, "You need to be logged in to access this feature. Please log in to continue."))
 
-        if (req.user?.isBlocked) return next(new ApiError(401, `You have been blocked from accessing this feature.Please contact support for further assistance.`))
-
+        if (req.user?.isBlocked) return next(new ApiError(401, `You have been blocked from accessing this feature. Please contact support for further assistance.`))
 
         next()
 

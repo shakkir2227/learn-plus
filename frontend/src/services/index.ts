@@ -12,7 +12,7 @@ export const getRequestOptions = (method: string, body?: unknown): RequestInit =
     return requestOptions
 }
 
-export const makeRequest = throttle(async (BASE_URL: string, URL: string, requestOptions?: RequestInit) => {
+export const makeRequest = async (BASE_URL: string, URL: string, requestOptions?: RequestInit) => {
     try {
         const response =
             await fetch(BASE_URL + URL, { ...requestOptions, credentials: "include" })
@@ -25,6 +25,6 @@ export const makeRequest = throttle(async (BASE_URL: string, URL: string, reques
         return Promise.resolve(new ApiError())
     }
 
-}, 5000)
+}
 
 

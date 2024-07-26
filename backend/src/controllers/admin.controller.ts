@@ -121,10 +121,30 @@ const blockOrUnblockInstructor = asyncHandler(async (req, res, next) => {
 
 })
 
+const logoutAdmin = asyncHandler(async (req, res) => {
+    if (!req.user) return
+
+    await Learner.findByIdAndUpdate(req.user._id, {
+        $set: { refreshToken: '' },
+    });
+
+    const options = {
+        httpOnly: true,
+        secure: true,
+    };
+
+    return res
+        .status(200)
+        .clearCookie("accessToken", options)
+        .clearCookie("refreshToken", options)
+        .json(new ApiResponse(200, {}, "User logged out"));
+});
+
 export {
     loginAdmin,
     getLoggedInAdmin,
     getAllUsers,
     blockOrUnblockLearner,
-    blockOrUnblockInstructor
+    blockOrUnblockInstructor,
+    logoutAdmin
 }

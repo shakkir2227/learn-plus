@@ -196,6 +196,25 @@ const updatePassword = asyncHandler(async (req, res, next) => {
     return res.json(new ApiResponse(200, {}, "Password updated successfully."))
 })
 
+const logoutLearner = asyncHandler(async (req, res) => {
+    if (!req.user) return
+
+    await Learner.findByIdAndUpdate(req.user._id, {
+        $set: { refreshToken: '' },
+    });
+
+    const options = {
+        httpOnly: true,
+        secure: true,
+    };
+
+    return res
+        .status(200)
+        .clearCookie("accessToken", options)
+        .clearCookie("refreshToken", options)
+        .json(new ApiResponse(200, {}, "User logged out"));
+});
+
 export {
     registerLearner,
     verifyLearnerEmail,
@@ -203,5 +222,6 @@ export {
     getLoggedInLearner,
     resendOTP,
     updateProfile,
-    updatePassword
+    updatePassword,
+    logoutLearner
 }

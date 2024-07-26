@@ -64,6 +64,13 @@ const loginService = async (loginFormData: ILoginFormData):
     return await makeRequest("/login", requestOptions)
 }
 
+const logoutService = async ():
+    Promise<ApiResponse<string> | IApiError> => {
+    const requestOptions = getRequestOptions("POST")
+    return await makeRequest("/logout", requestOptions)
+}
+
+
 const getLoggedInUserService = async () => {
     const requestOptions = getRequestOptions("GET")
     return await makeRequest("/get-loggedIn-learner", requestOptions)
@@ -80,7 +87,8 @@ export {
     verifyEmailService,
     loginService,
     getLoggedInUserService,
-    resendOTPService
+    resendOTPService,
+    logoutService
 }
 
 
