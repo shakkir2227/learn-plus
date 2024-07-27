@@ -10,7 +10,8 @@ export enum ROUTE_PATHS {
     courseDetails = "/courses/:id",
     dashboard = "/dashboard",
     account = "/account",
-    profile = "/profile"
+    profile = "/profile",
+    addCourse = "/add-course"
 }
 
 export enum LEARNER_ROUTE_PATHS {
@@ -77,3 +78,69 @@ export const INSTRUCTOR_FAQ = [
         content: "You will need a laptop or a desktop computer, a stable internet connection, a webcam, and a microphone for creating a lesson."
     },
 ]
+
+type Language = {
+    label: string;
+    value: string;
+};
+
+export const languages: ReadonlyArray<Language> = [
+    { label: "English", value: "English" },
+    { label: "French", value: "French" },
+    { label: "German", value: "German" },
+    { label: "Spanish", value: "Spanish" },
+    { label: "Portuguese", value: "Portuguese" },
+    { label: "Russian", value: "Russian" },
+    { label: "Japanese", value: "Japanese" },
+    { label: "Korean", value: "Korean" },
+    { label: "Chinese", value: "Chinese" },
+    { label: "Arabic", value: "Arabic" },
+    { label: "Italian", value: "Italian" },
+    { label: "Dutch", value: "Dutch" },
+    { label: "Turkish", value: "Turkish" },
+    { label: "Swedish", value: "Swedish" },
+    { label: "Norwegian", value: "Norwegian" },
+    { label: "Danish", value: "Danish" },
+    { label: "Finnish", value: "Finnish" },
+    { label: "Polish", value: "Polish" },
+    { label: "Czech", value: "Czech" },
+    { label: "Hungarian", value: "Hungarian" },
+    { label: "Greek", value: "Greek" },
+    { label: "Hebrew", value: "Hebrew" },
+    { label: "Thai", value: "Thai" },
+    { label: "Vietnamese", value: "Vietnamese" },
+    { label: "Indonesian", value: "Indonesian" },
+    { label: "Malay", value: "Malay" },
+    { label: "Bengali", value: "Bengali" },
+    { label: "Hindi", value: "Hindi" },
+    { label: "Telugu", value: "Telugu" },
+    { label: "Marathi", value: "Marathi" },
+    { label: "Tamil", value: "Tamil" },
+    { label: "Urdu", value: "Urdu" },
+    { label: "Gujarati", value: "Gujarati" },
+    { label: "Malayalam", value: "Malayalam" },
+    { label: "Kannada", value: "Kannada" },
+    { label: "Punjabi", value: "Punjabi" },
+    { label: "Odia", value: "Odia" },
+    { label: "Assamese", value: "Assamese" },
+    { label: "Sanskrit", value: "Sanskrit" },
+    { label: "Nepali", value: "Nepali" },
+    { label: "Konkani", value: "Konkani" },
+    { label: "Sindhi", value: "Sindhi" },
+    { label: "Manipuri", value: "Manipuri" },
+    { label: "Bodo", value: "Bodo" },
+    { label: "Swahili", value: "Swahili" },
+    { label: "Zulu", value: "Zulu" },
+    { label: "Xhosa", value: "Xhosa" },
+    { label: "Hausa", value: "Hausa" },
+    { label: "Amharic", value: "Amharic" },
+    { label: "Somali", value: "Somali" },
+    { label: "Tigrinya", value: "Tigrinya" },
+] as const;
+
+
+export const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+export  const sizeInMB = (sizeInBytes: number, decimalsNum = 2) => {
+    const result = sizeInBytes / (1024 * 1024);
+    return +result.toFixed(decimalsNum);
+};

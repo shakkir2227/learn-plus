@@ -12,6 +12,7 @@ import CoursesList from "../pages/instructor/CoursesList"
 import { useEffect, useState } from "react"
 import InstructorDashboard from "../pages/instructor/InstructorDashboard"
 import Account from "../pages/instructor/Account"
+import AddCourse from "../pages/instructor/AddCourse"
 
 
 const InstructorRoutes: React.FC = () => {
@@ -44,8 +45,8 @@ const InstructorRoutes: React.FC = () => {
                 <Route path={ROUTE_PATHS.dashboard} element={<InstructorDashboard />} ></Route>
                 <Route path={ROUTE_PATHS.account} element={<Account />} ></Route>
             </Route>
+                <Route path={ROUTE_PATHS.addCourse} element={<AddCourse />} ></Route>
         </Routes >
-
     )
 
 }

@@ -14,6 +14,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import CourseCard from '../../components/learner/CourseCard'
 import Footer from '../../components/learner/Footer'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '../../components/ui/select'
+import { PlusCircledIcon } from "@radix-ui/react-icons"
 
 const CoursesList = () => {
     return (
@@ -22,19 +23,30 @@ const CoursesList = () => {
                 <Header logoTheme='WHITE' iconColor='black' />
 
                 <div className='mt-3 border-b-2 border-gray-200' > </div>
-                <p className='sm:text-2xl p-2  font-serif mb-10 sm:ml-28 text-center sm:text-start mt-10'>Manage your courses
-                    <br />
-                </p>
-
-                <div >
-                    
-
-                    <div className=' ml-5 w-8/12  '>
+                <div className='w-11/12 mx-auto'>
+                    <div className='flex justify-between mt-10'>
+                        <div className='mb-10'>
+                            <p className='sm:text-2xl   font-serif  text-center sm:text-start  ml-3'>Manage your courses
+                                <br />
+                                <span className='text-muted-foreground text-sm'> Organize and track your courses with ease.</span>
+                            </p>
+                            <div className="flex w-72 max-w-sm items-center space-x-2 ml-2 mt-5 ">
+                                <Input type="text" placeholder="Course name" />
+                                <Button type="submit">Search</Button>
+                            </div>
+                        </div>
+                        <div className="mr-10">
+                            <Button >
+                                <PlusCircledIcon className="mr-2 h-4 w-4" />
+                                Add course
+                            </Button>
+                        </div>
+                    </div>
+                    <div className='  '>
                         <div className='flex '>
                             <div></div>
-                            <div className='text-xl text-gray-700 py-5 ml-2 mt-10  font-bold'>130 results</div>
                         </div>
-                        <div className="grid grid-cols-2 gap-10 mr-10   ">
+                        <div className="grid grid-cols-3 gap-10 mr-10   ">
                             {[1, 2, 3, 4, 5, 6, 7].map((index, value) => {
                                 return (<div className=" bg-customBg flex flex-col gap-2 md:mx-0 mx-auto md:h-52 rounded-2xl hover:opacity-70 hover:border-2 border-black cursor-pointer">
                                     <p className="font-semibold p-5 font-serif ">Master The Fundamentals Of Chemistry <br></br>

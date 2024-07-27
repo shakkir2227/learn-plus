@@ -104,7 +104,7 @@ const CoursesList = () => {
                 </div>
             </div>
 
-            <div className=' min-h-[3480px]  sm:hidden '>
+            {/* <div className=' min-h-[3480px]  sm:hidden '>
                 <DashBoardHeader />
                 <div className='mt-3 border-b-2 border-gray-200' > </div>
 
@@ -178,7 +178,7 @@ const CoursesList = () => {
                 <div>
                     <Footer />
                 </div>
-            </div>
+            </div> */}
 
         </>
     )
