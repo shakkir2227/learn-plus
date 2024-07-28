@@ -43,6 +43,7 @@ export enum ADMIN_ROUTE_PATHS {
 export const LEARNER_BASE_URL = "http://localhost:3000/api/v1/learners"
 export const INSTRUCTOR_BASE_URL = "http://localhost:3000/api/v1/instructors"
 export const ADMIN_BASE_URL = "http://localhost:3000/api/v1/admin"
+export const COURSES_BASE_URL = "http://localhost:3000/api/v1/courses"
 
 export type User = "LEARNER" | "INSTRUCTOR" | "ADMIN"
 

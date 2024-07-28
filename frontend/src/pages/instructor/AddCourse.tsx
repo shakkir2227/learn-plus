@@ -23,7 +23,7 @@ import {
     FormLabel,
     FormMessage,
 } from "../../components/ui/form"
-import { Check, ChevronsUpDown, ImagePlus, Upload } from 'lucide-react'
+import { Check, ChevronsUpDown, ImagePlus, Upload, X } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select'
 import { Popover, PopoverContent, PopoverTrigger } from '../../components/ui/popover'
 import { cn } from "../../lib/utils"
@@ -31,6 +31,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { languages } from '../../constants'
 import { validateImageFile } from '../../utils/imageValidation'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../../components/ui/dialog'
+import { createCourseService } from '../../services/instructor/CourseService'
 
 const subjects = [
     { label: "Mathematics", value: "math" },
@@ -82,6 +83,7 @@ type Lesson = {
 const AddCourse = () => {
     const [preview, setPreview] = React.useState<string | ArrayBuffer | null>("");
     const [lessons, setLessons] = useState<Lesson[]>([])
+    const [lessonsInput, setLessonsInput] = useState<Lesson[]>([])
     const [lessonTitleError, setLessonTitleError] = useState<string>("")
     const [lessonContentError, setLessonContentError] = useState<string>("")
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -124,8 +126,25 @@ const AddCourse = () => {
             accept: { "image/png": [], "image/jpg": [], "image/jpeg": [] },
         });
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        const formData = new FormData();
+        const {name, description, language, objectives, subject} = values
+        formData.append('basicDetails', JSON.stringify({ name, description, language, objectives, subject }));
+        formData.append('thumbnail', values.thumbnail);
+        lessonsInput.forEach((lesson, index) => {
+            if (lesson.content) {
+                formData.append(`lessons[${index}][content]`, lesson.content)
+            }
+            formData.append(`lessons[${index}][title]`, lesson.title);
+        })
+        const response = await createCourseService(formData)
+        if (!response.success && response.message) {
+
+        }
+        if (response.success) {
+
+        }
+
     }
 
     const addNewSubject = () => {
@@ -159,26 +178,14 @@ const AddCourse = () => {
         const { id, title, content } = lessons[lessons.length - 1]
         if (!title) {
             setLessonTitleError("Title is required.")
-            setLessons(lessons.map((lesson) => {
-                if (lesson.id !== id) return lesson
-                else return { ...lesson, title: "", content: new File([""], "filename") }
-            }))
             return
         }
         if (!/^[a-zA-Z0-9\s]{3,50}$/.test(title)) {
             setLessonTitleError("Title: 3-50 chars, letters, numbers, and spaces only")
-            setLessons(lessons.map((lesson) => {
-                if (lesson.id !== id) return lesson
-                else return { ...lesson, title: "", content: new File([""], "filename") }
-            }))
             return
         }
         if (!content) {
             setLessonContentError("Content is required.")
-            setLessons(lessons.map((lesson) => {
-                if (lesson.id !== id) return lesson
-                else return { ...lesson, title: "", content: new File([""], "filename") }
-            }))
             return
         }
 
@@ -189,27 +196,25 @@ const AddCourse = () => {
         const fileSize = content.size;
         const fileExtension = fileName.split('.').pop().toLowerCase();
 
-        // Check file type
         if (!allowedExtensions.includes(fileExtension)) {
             setLessonContentError("Invalid file type. Only video files are allowed.")
-            setLessons(lessons.map((lesson) => {
-                if (lesson.id !== id) return lesson
-                else return { ...lesson, title: "", content: new File([""], "filename") }
-            }))
             return
         }
 
-        // Check file size
         if (fileSize > maxSize) {
             setLessonContentError("File size exceeds 100 MB.")
-            setLessons(lessons.map((lesson) => {
-                if (lesson.id !== id) return lesson
-                else return { ...lesson, title: "", content: new File([""], "filename") }
-            }))
             return
         }
+
+        setLessonsInput([...lessonsInput, { id: lessonsInput.length, title, content }])
         setIsDialogOpen(false);
     }
+
+    const removeLessonInput = () => {
+        lessonsInput.pop()
+        setLessonsInput([...lessonsInput])
+    }
+
 
     return (
         <div>
@@ -276,6 +281,27 @@ const AddCourse = () => {
                                         <CardContent>
                                             <div className="grid gap-2">
                                                 <div className="grid grid-cols-3 gap-y-5">
+
+                                                    {lessonsInput.map((lesson) => {
+                                                        return (
+                                                            <div key={lesson.id}>
+                                                                <p className="relative flex flex-col text-sm text-center aspect-square w-3/4 items-center justify-center rounded-md border border-dashed bg-muted">
+                                                                    {lesson.id === lessonsInput.length - 1 &&
+                                                                        <button className="absolute top-2 right-2 p-1 rounded-full hover:bg-gray-200" onClick={removeLessonInput}>
+                                                                            <X className="h-4 w-4 text-muted-foreground" />
+                                                                            <span className="sr-only">Remove</span>
+                                                                        </button>
+                                                                    }
+                                                                    <span className="font-mono">{ }</span>
+                                                                    <span className="font-serif">{`${lesson?.title}`}</span>
+                                                                    <span className="text-xs font-serif">{lesson?.content?.name}</span>
+                                                                </p>
+
+                                                            </div>
+                                                        )
+                                                    })}
+
+
                                                     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                                                         <DialogTrigger asChild onClick={addLesson}>
                                                             <button className="flex aspect-square w-3/4 items-center justify-center rounded-md border border-dashed bg-muted">
