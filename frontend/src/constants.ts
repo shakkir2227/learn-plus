@@ -7,7 +7,8 @@ export enum ROUTE_PATHS {
     login = "/login",
     verify = "/verify",
     courses = "/courses",
-    courseDetails = "/courses/:id",
+    courseDetails = "/courses/:courseId",
+    udpateCourse = "/update-course/:courseId",
     dashboard = "/dashboard",
     account = "/account",
     profile = "/profile",
@@ -32,6 +33,8 @@ export enum INSTRUCTOR_ROUTE_PATHS {
     login = "/instructor/login",
     account = "/instructor/account",
     courses = "/instructor/courses",
+    addCourse = "/instructor/add-course",
+    updateCourse = "/instructor/update-course",
     dashboard = "/instructor/dashboard",
 }
 

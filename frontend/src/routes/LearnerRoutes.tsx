@@ -34,15 +34,15 @@ const LearnerRoutes: React.FC = () => {
     return loading ? <>Loading...</> : (
         <Routes>
             <Route path={ROUTE_PATHS.root} element={<Home />}> </Route>
+            <Route path={ROUTE_PATHS.courses} element={<CoursesList />} ></Route>
+            <Route path={ROUTE_PATHS.courseDetails} element={<CourseDetails />} ></Route>
             <Route element={<AuthLayout forLoggedInUsers={false} />}>
                 <Route path={ROUTE_PATHS.signup} element={<Signup />} ></Route>
                 <Route path={ROUTE_PATHS.verify} element={<Verify />} ></Route>
                 <Route path={ROUTE_PATHS.login} element={<Login />} ></Route>
             </Route>
             <Route element={<AuthLayout forLoggedInUsers={true} />}>
-                <Route path={ROUTE_PATHS.courses} element={<CoursesList />} ></Route>
-                <Route path={ROUTE_PATHS.courseDetails} element={<CourseDetails />} ></Route>       
-                <Route path={ROUTE_PATHS.account} element={<Account />} ></Route>       
+                <Route path={ROUTE_PATHS.account} element={<Account />} ></Route>
             </Route>
         </Routes>
     )

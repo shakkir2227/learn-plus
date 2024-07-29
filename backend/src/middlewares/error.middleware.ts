@@ -7,7 +7,7 @@ const errorHandler = (
     res: Response,
     next: NextFunction) => {
 
-    return res.status(err.statusCode).json(err)
+    return res.status(err?.statusCode).json(err)
 }
 
 export default errorHandler

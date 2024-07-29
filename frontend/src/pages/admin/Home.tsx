@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/ta
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
 import Dashboard from './Dashboard'
 import UsersList from './UsersList'
+import CoursesList from './CoursesList'
 
 const Home = () => {
     return (
@@ -31,6 +32,9 @@ const Home = () => {
                     </TabsContent>
                     <TabsContent value="users" className="space-y-4">
                         <UsersList />
+                    </TabsContent>
+                    <TabsContent value="courses" className="space-y-4">
+                        <CoursesList />
                     </TabsContent>
 
                 </Tabs>

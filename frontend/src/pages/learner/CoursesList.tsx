@@ -1,21 +1,40 @@
-import React from 'react'
-import Logo from '../../components/shared/Logo'
-import { Link } from 'react-router-dom'
-import { PiChatCircleDots } from 'react-icons/pi'
-import { FaRegUserCircle } from 'react-icons/fa'
-import { INSTRUCTOR_ROUTE_PATHS } from '../../constants'
-import DashBoardHeader from '../../components/instructor/DashBoardHeader'
 import { MdCheckBoxOutlineBlank } from "react-icons/md";
 import { Input } from '../../components/ui/input'
 import { Button } from '../../components/ui/button'
 import { MdKeyboardArrowDown } from "react-icons/md";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../../components/ui/card'
-import CourseCard from '../../components/learner/CourseCard'
 import Footer from '../../components/learner/Footer'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '../../components/ui/select'
 import Header from '../../components/learner/Header'
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import ToastError from "../../components/shared/ToastError";
+import ToastSuccess from "../../components/shared/ToastSuccess";
+import { useNavigate } from "react-router";
+import { LEARNER_ROUTE_PATHS } from "../../constants";
+import { Course, getAllCoursesService, Language } from "../../services/learner/CourseService";
+import { Subject } from "../../services/instructor/CourseService";
+
 
 const CoursesList = () => {
+
+    const [courses, setCourses] = useState<Course[]>()
+    const [languages, setLanguages] = useState<Language[]>()
+    const [subjects, setSubjects] = useState<Subject[]>()
+
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        (async () => {
+            const response = await getAllCoursesService()
+
+            if (response.success && response.data) {
+                setCourses(response.data.allCourses)
+                setLanguages(response.data.allLanguages)
+                setSubjects(response.data.allSubjects)
+            }
+
+        })()
+    }, [])
+
     return (
         <>
             <div className='h-full sm:block hidden'>
@@ -39,20 +58,15 @@ const CoursesList = () => {
                                 <p className='text-lg font-semibold'>Languages</p>
                                 <MdKeyboardArrowDown className='mt-2' />
                             </div>
-
                             <div className='mt-6 flex flex-col gap-4'>
-                                <div className="flex gap-3 ">
-                                    <MdCheckBoxOutlineBlank size={25} className='mt-1' />
-                                    <p>English (1,200)</p>
-                                </div>
-                                <div className="flex gap-3 ">
-                                    <MdCheckBoxOutlineBlank size={25} className='mt-1' />
-                                    <p>Spanish (1,700)</p>
-                                </div>
-                                <div className="flex gap-3 ">
-                                    <MdCheckBoxOutlineBlank size={25} className='mt-1' />
-                                    <p>Chinese (900)</p>
-                                </div>
+                                {
+                                    languages?.map((language) => {
+                                        return <div className="flex gap-3 ">
+                                            <MdCheckBoxOutlineBlank size={25} className='mt-1' />
+                                            <p>{language.name[0].toUpperCase() + language.name.slice(1).toLowerCase()}</p>
+                                        </div>
+                                    })
+                                }
                             </div>
 
                             <div className='mt-10 flex w-72 justify-between '>
@@ -61,41 +75,36 @@ const CoursesList = () => {
                             </div>
 
                             <div className='mt-6 flex flex-col gap-4'>
-                                <div className="flex gap-3  ">
-                                    <MdCheckBoxOutlineBlank size={25} className='mt-1' />
-                                    <p>Chemistry (1,200)</p>
-                                </div>
-                                <div className="flex gap-3  ">
-                                    <MdCheckBoxOutlineBlank size={25} className='mt-1' />
-                                    <p>Computer science (1,700)</p>
-                                </div>
-                                <div className="flex gap-3  ">
-                                    <MdCheckBoxOutlineBlank size={25} className='mt-1' />
-                                    <p>Chinese (900)</p>
-                                </div>
+                                {
+                                    subjects?.map((subject) => {
+                                        return <div className="flex gap-3 ">
+                                            <MdCheckBoxOutlineBlank size={25} className='mt-1' />
+                                            <p>{subject.name[0].toUpperCase() + subject.name.slice(1).toLowerCase()}</p>
+                                        </div>
+                                    })
+                                }
                             </div>
-
                         </div>
-
                     </div>
 
                     <div className='mt-24 ml-5 w-8/12  '>
                         <div className='flex '>
                             <div></div>
-                            <div className='text-xl text-gray-700 py-5 ml-2 mt-10  font-bold'>130 results</div>
+                            <div className='text-xl text-gray-700 py-5 ml-2 mt-10  font-bold'>{courses?.length} result(s)</div>
                         </div>
                         <div className="grid grid-cols-2 gap-10 mr-10   ">
-                            {[1, 2, 3, 4, 5, 6, 7].map((index, value) => {
-                                return (<div className=" bg-customBg flex flex-col gap-2 md:mx-0 mx-auto md:h-52 rounded-2xl hover:opacity-70 hover:border-2 border-black cursor-pointer">
-                                    <p className="font-semibold p-5 font-serif ">Master The Fundamentals Of Chemistry <br></br>
-                                        <span className="text-xs font-light">Rahsoft</span>
+                            {courses?.map((course) => {
+                                return (<div onClick={() => navigate(`${LEARNER_ROUTE_PATHS.courses}/${course._id}`)} className=" bg-customBg flex flex-col gap-2 md:mx-0 mx-auto md:h-52 rounded-2xl hover:opacity-70 hover:border-2 border-black cursor-pointer">
+                                    <p  className="font-semibold p-5 font-serif ">{course.name} <br></br>
+                                        <span className="text-xs font-light">{course.instructorName}</span>
                                         <br />
-                                        <span className="text-xs font-light">Chemistry | English</span>
+                                        <span className="text-xs font-light">{course.courseSubject.name[0].toUpperCase() + course.courseSubject.name.slice(1).toLocaleLowerCase()} | {course.courseLanguage.name[0].toUpperCase() + course.courseLanguage.name.slice(1).toLocaleLowerCase()}</span>
                                     </p>
                                     <p className="text-xs font-semibold p-5">10,465 students Enrolled </p>
                                 </div>
                                 )
-                            })}
+                            })
+                            }
                         </div>
                     </div>
                 </div>

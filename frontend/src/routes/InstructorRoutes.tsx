@@ -41,11 +41,12 @@ const InstructorRoutes: React.FC = () => {
                 <Route path={ROUTE_PATHS.login} element={<Login />} ></Route>
             </Route>
             <Route element={<AuthLayout forLoggedInUsers={true} />}>
+                <Route path={ROUTE_PATHS.addCourse} element={<AddCourse />} ></Route>
                 <Route path={ROUTE_PATHS.courses} element={<CoursesList />} ></Route>
+                <Route path={ROUTE_PATHS.udpateCourse} element={<AddCourse/>} ></Route>
                 <Route path={ROUTE_PATHS.dashboard} element={<InstructorDashboard />} ></Route>
                 <Route path={ROUTE_PATHS.account} element={<Account />} ></Route>
             </Route>
-                <Route path={ROUTE_PATHS.addCourse} element={<AddCourse />} ></Route>
         </Routes >
     )
 

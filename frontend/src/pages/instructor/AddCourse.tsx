@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { CSSProperties, forwardRef, useEffect, useRef, useState } from 'react'
 import { Separator } from '../../components/ui/separator'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { ACCEPTED_IMAGE_TYPES, LEARNER_ROUTE_PATHS, MAX_FILE_SIZE, MAX_IMAGE_SIZE, ROUTE_PATHS, sizeInMB } from '../../constants'
@@ -31,19 +31,12 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { languages } from '../../constants'
 import { validateImageFile } from '../../utils/imageValidation'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../../components/ui/dialog'
-import { createCourseService } from '../../services/instructor/CourseService'
+import { createCourseService, getAllSubjectsService, Subject } from '../../services/instructor/CourseService'
+import HashLoader from 'react-spinners/HashLoader'
+import toast, { Toaster } from 'react-hot-toast'
+import ToastError from '../../components/shared/ToastError'
+import ToastSuccess from '../../components/shared/ToastSuccess'
 
-const subjects = [
-    { label: "Mathematics", value: "math" },
-    { label: "Science", value: "science" },
-    { label: "History", value: "history" },
-    { label: "Literature", value: "literature" },
-    { label: "Art", value: "art" },
-    { label: "Music", value: "music" },
-    { label: "Computer Science", value: "cs" },
-    { label: "Economics", value: "economics" },
-    { label: "Philosophy", value: "philosophy" },
-];
 
 const formSchema = z.object({
     name: z.string()
@@ -65,7 +58,7 @@ const formSchema = z.object({
     objectives: z.array(
         z.string()
             .min(3, { message: "At least 3 characters long." })
-            .max(50, { message: "Cannot exceed 50 characters." })
+            .max(100, { message: "Cannot exceed 100 characters." })
             .regex(/^[a-zA-Z0-9\s\-']+$/, { message: "Contains invalid characters." }),
 
     ),
@@ -80,6 +73,14 @@ type Lesson = {
     content: File
 }
 
+const override: CSSProperties = {
+    display: "block",
+    marginLeft: "170px",
+    borderColor: "red",
+    width: "20px"
+};
+
+
 const AddCourse = () => {
     const [preview, setPreview] = React.useState<string | ArrayBuffer | null>("");
     const [lessons, setLessons] = useState<Lesson[]>([])
@@ -87,6 +88,7 @@ const AddCourse = () => {
     const [lessonTitleError, setLessonTitleError] = useState<string>("")
     const [lessonContentError, setLessonContentError] = useState<string>("")
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [subjects, setSubjects] = useState<Subject[]>()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -96,6 +98,8 @@ const AddCourse = () => {
             thumbnail: new File([""], "filename")
         },
     })
+
+    
 
     const { fields, append } = useFieldArray({
         name: "objectives",
@@ -128,7 +132,7 @@ const AddCourse = () => {
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         const formData = new FormData();
-        const {name, description, language, objectives, subject} = values
+        const { name, description, language, objectives, subject } = values
         formData.append('basicDetails', JSON.stringify({ name, description, language, objectives, subject }));
         formData.append('thumbnail', values.thumbnail);
         lessonsInput.forEach((lesson, index) => {
@@ -139,10 +143,21 @@ const AddCourse = () => {
         })
         const response = await createCourseService(formData)
         if (!response.success && response.message) {
-
+            toast.custom((t) => (
+                <ToastError t={t} message={response.message as string} />
+            ), {
+                duration: 2000, // Auto dismiss after 2 seconds
+            });
         }
-        if (response.success) {
-
+        if (response.success && response.message) {
+            form.reset()
+            setPreview(null)
+            setLessonsInput([])
+            return toast.custom((t) => (
+                <ToastSuccess message={response.message as string} t={t} />
+            ), {
+                duration: 2000, // Auto dismiss after 2 seconds
+            })
         }
 
     }
@@ -214,6 +229,16 @@ const AddCourse = () => {
         lessonsInput.pop()
         setLessonsInput([...lessonsInput])
     }
+
+    useEffect(() => {
+        (async () => {
+            const response = await getAllSubjectsService()
+            if (response && response.success) {
+                setSubjects(response.data?.allSubjects)
+            }
+        })()
+
+    }, [subjects])
 
 
     return (
@@ -379,9 +404,9 @@ const AddCourse = () => {
                                                                         )}
                                                                     >
                                                                         {field.value
-                                                                            ? subjects.find(
-                                                                                (subject) => subject.value === field.value
-                                                                            )?.label
+                                                                            ? subjects?.find(
+                                                                                (subject) => subject.name === field.value
+                                                                            )?.name
                                                                             : "Select subject"}
                                                                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                                                     </Button>
@@ -391,25 +416,25 @@ const AddCourse = () => {
                                                                 <Command>
                                                                     <CommandInput placeholder="Search subject..." />
                                                                     <CommandList>
-                                                                        <CommandEmpty className='cursor-pointer text-center py-3' onClick={addNewSubject}>Add subject</CommandEmpty>
+                                                                        <CommandEmpty>No subject found.</CommandEmpty>
                                                                         <CommandGroup>
-                                                                            {subjects.map((subject) => (
+                                                                            {subjects?.map((subject) => (
                                                                                 <CommandItem
-                                                                                    value={subject.label}
-                                                                                    key={subject.value}
+                                                                                    value={subject.name}
+                                                                                    key={subject.name}
                                                                                     onSelect={() => {
-                                                                                        form.setValue("subject", subject.value)
+                                                                                        form.setValue("subject", subject.name)
                                                                                     }}
                                                                                 >
                                                                                     <Check
                                                                                         className={cn(
                                                                                             "mr-2 h-4 w-4",
-                                                                                            subject.value === field.value
+                                                                                            subject.name === field.value
                                                                                                 ? "opacity-100"
                                                                                                 : "opacity-0"
                                                                                         )}
                                                                                     />
-                                                                                    {subject.label}
+                                                                                    {subject.name}
                                                                                 </CommandItem>
                                                                             ))}
                                                                         </CommandGroup>
@@ -572,19 +597,22 @@ const AddCourse = () => {
                                             ))}
                                         </CardContent>
                                     </Card>
-
-
-                                    <Button type="submit">Create</Button>
-
+                                        
+                                    {form.formState.isSubmitting ? <HashLoader
+                                        loading={form.formState.isSubmitting}
+                                        cssOverride={override}
+                                        size={30}
+                                        aria-label="Loading Spinner"
+                                        data-testid="loader" /> :
+                                        <Button disabled={form.formState.isSubmitting} type="submit">Create</Button>
+                                    }
                                 </div>
                             </div>
-
-
-
                         </form>
                     </Form>
                 </div>
             </div>
+            <div><Toaster /></div>
         </div >
     )
 }

@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../../components/instructor/Header'
 import Logo from '../../components/shared/Logo'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { PiChatCircleDots } from 'react-icons/pi'
 import { FaRegUserCircle } from 'react-icons/fa'
 import { INSTRUCTOR_ROUTE_PATHS } from '../../constants'
@@ -15,52 +15,71 @@ import CourseCard from '../../components/learner/CourseCard'
 import Footer from '../../components/learner/Footer'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '../../components/ui/select'
 import { PlusCircledIcon } from "@radix-ui/react-icons"
+import { Course } from '../../services/learner/CourseService'
+import { getAllCoursesService } from '../../services/instructor/CourseService'
 
 const CoursesList = () => {
+    const [courses, setCourses] = useState<Course[]>()
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        (async () => {
+            const response = await getAllCoursesService()
+
+            if (response.success && response.data) {
+                setCourses(response.data.allCourses)
+            }
+
+        })()
+    }, [])
+
     return (
         <>
             <div className='h-full sm:block hidden'>
                 <Header logoTheme='WHITE' iconColor='black' />
-
                 <div className='mt-3 border-b-2 border-gray-200' > </div>
-                <div className='w-11/12 mx-auto'>
-                    <div className='flex justify-between mt-10'>
-                        <div className='mb-10'>
-                            <p className='sm:text-2xl   font-serif  text-center sm:text-start  ml-3'>Manage your courses
-                                <br />
-                                <span className='text-muted-foreground text-sm'> Organize and track your courses with ease.</span>
-                            </p>
-                            <div className="flex w-72 max-w-sm items-center space-x-2 ml-2 mt-5 ">
-                                <Input type="text" placeholder="Course name" />
-                                <Button type="submit">Search</Button>
+                {
+                    courses &&
+                    <div className='w-11/12 mx-auto'>
+                        <div className='flex justify-between mt-10'>
+                            <div className='mb-10'>
+                                <p className='sm:text-2xl   font-serif  text-center sm:text-start  ml-3'>Manage your courses
+                                    <br />
+                                    <span className='text-muted-foreground text-sm'> Organize and track your courses with ease.</span>
+                                </p>
+                                <div className="flex w-72 max-w-sm items-center space-x-2 ml-2 mt-5 ">
+                                    <Input type="text" placeholder="Course name" />
+                                    <Button type="submit">Search</Button>
+                                </div>
+                            </div>
+                            <div className="mr-10">
+                                <Button onClick={()=> navigate(INSTRUCTOR_ROUTE_PATHS.addCourse)} >
+                                    <PlusCircledIcon className="mr-2 h-4 w-4" />
+                                    Add course
+                                </Button>
                             </div>
                         </div>
-                        <div className="mr-10">
-                            <Button >
-                                <PlusCircledIcon className="mr-2 h-4 w-4" />
-                                Add course
-                            </Button>
+                        <div className='  '>
+                            <div className='flex '>
+                                <div></div>
+                            </div>
+                            <div className="grid grid-cols-3 gap-10 mr-10   ">
+                                {courses.map((course, index) => {
+                                    return (<div className=" bg-customBg flex flex-col gap-2 md:mx-0 mx-auto  rounded-2xl  border-black ">
+                                        <p className="font-semibold p-5 font-serif ">{course.name} <br></br>
+                                            <span className="text-xs font-light">{course.instructorName}</span>
+                                            <br />
+                                            <span className="text-xs font-light">{course.courseSubject.name[0].toUpperCase() + course.courseSubject.name.slice(1).toLocaleLowerCase()} | {course.courseLanguage.name[0].toUpperCase() + course.courseLanguage.name.slice(1).toLocaleLowerCase()}</span>
+                                        </p>
+                                        <p className="text-xs font-semibold p-3 pl-5">10,465 students Enrolled </p>
+                                        <Button onClick={() => navigate(INSTRUCTOR_ROUTE_PATHS.updateCourse+`/${course._id}`) } className='mr-auto ml-5 mb-5  hover:border-2 '>Update</Button>
+                                    </div>
+                                    )
+                                })}
+                            </div>
                         </div>
                     </div>
-                    <div className='  '>
-                        <div className='flex '>
-                            <div></div>
-                        </div>
-                        <div className="grid grid-cols-3 gap-10 mr-10   ">
-                            {[1, 2, 3, 4, 5, 6, 7].map((index, value) => {
-                                return (<div className=" bg-customBg flex flex-col gap-2 md:mx-0 mx-auto md:h-52 rounded-2xl hover:opacity-70 hover:border-2 border-black cursor-pointer">
-                                    <p className="font-semibold p-5 font-serif ">Master The Fundamentals Of Chemistry <br></br>
-                                        <span className="text-xs font-light">Rahsoft</span>
-                                        <br />
-                                        <span className="text-xs font-light">Chemistry | English</span>
-                                    </p>
-                                    <p className="text-xs font-semibold p-5">10,465 students Enrolled </p>
-                                </div>
-                                )
-                            })}
-                        </div>
-                    </div>
-                </div>
+                }
                 <div>
                     <Footer />
                 </div>

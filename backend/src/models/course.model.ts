@@ -8,6 +8,7 @@ export interface ICourse extends Document {
     language: mongoose.Types.ObjectId
     thumbnail: string,
     objectives: Array<string>,
+    isBlocked: boolean,
     createdAt: string,
     updatedAt: string
 }
@@ -16,7 +17,7 @@ const courseSchema = new Schema({
     name: {
         type: String,
         required: true,
-        trim:true
+        trim: true
     },
     instructor: {
         type: Types.ObjectId,
@@ -44,6 +45,10 @@ const courseSchema = new Schema({
         required: true,
         trim: true
     },
+    isBlocked: {
+        type: Boolean,
+        default:false
+    }
 }, {
     timestamps: true
 })
