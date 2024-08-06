@@ -6,13 +6,29 @@ import { IAdmin } from "../../store/AdminSlice.ts"
 import { ADMIN_BASE_URL, COURSES_BASE_URL, INSTRUCTOR_BASE_URL, LEARNER_BASE_URL } from "../../constants.ts"
 import { getRequestOptions, makeRequest } from "../index.ts"
 import { IUser } from "../../store/AdminSlice.ts"
-import { Course, Language } from "../learner/CourseService.ts"
+import { Course } from "../learner/CourseService.ts"
 
 
 export const createCourseService = async (formData: FormData): Promise<ApiResponse<string> | IApiError> => {
     try {
         const response = await fetch(`${COURSES_BASE_URL}/create-course`, {
             method: 'POST',
+            body: formData,
+            credentials: "include"
+        });
+
+        const result = await response.json()
+        return result
+
+    } catch (error) {
+        return Promise.resolve(new ApiError())
+    }
+}
+
+export const updateCourseService = async (formData: FormData, courseId: string): Promise<ApiResponse<string> | IApiError> => {
+    try {
+        const response = await fetch(`${COURSES_BASE_URL}/update-course/${courseId}`, {
+            method: 'PUT',
             body: formData,
             credentials: "include"
         });

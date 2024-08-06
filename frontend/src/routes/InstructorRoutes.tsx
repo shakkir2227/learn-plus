@@ -13,6 +13,7 @@ import { useEffect, useState } from "react"
 import InstructorDashboard from "../pages/instructor/InstructorDashboard"
 import Account from "../pages/instructor/Account"
 import AddCourse from "../pages/instructor/AddCourse"
+import UpdateCourse from "../pages/instructor/UpdateCourse"
 
 
 const InstructorRoutes: React.FC = () => {
@@ -43,7 +44,7 @@ const InstructorRoutes: React.FC = () => {
             <Route element={<AuthLayout forLoggedInUsers={true} />}>
                 <Route path={ROUTE_PATHS.addCourse} element={<AddCourse />} ></Route>
                 <Route path={ROUTE_PATHS.courses} element={<CoursesList />} ></Route>
-                <Route path={ROUTE_PATHS.udpateCourse} element={<AddCourse/>} ></Route>
+                <Route path={ROUTE_PATHS.udpateCourse} element={<UpdateCourse/>} ></Route>
                 <Route path={ROUTE_PATHS.dashboard} element={<InstructorDashboard />} ></Route>
                 <Route path={ROUTE_PATHS.account} element={<Account />} ></Route>
             </Route>

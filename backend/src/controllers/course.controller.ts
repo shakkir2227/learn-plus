@@ -6,7 +6,11 @@ import ApiError from "../utils/ApiError";
 import ApiResponse from "../utils/ApiResponse";
 import asyncHandler from "../utils/asyncHandler";
 import { uploadOnCloudinary } from "../utils/cloudinary";
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
+
+type Lesson = {
+    title: string
+}
 
 
 const createCourse = asyncHandler(async (req, res, next) => {
@@ -86,6 +90,144 @@ const createCourse = asyncHandler(async (req, res, next) => {
 
 
     return res.json(new ApiResponse(201, { course }, "Course Created Successfully!"))
+
+})
+
+const updateCourse = asyncHandler(async (req, res, next) => {
+    if (!req.user) return
+    const { courseId } = req.params
+    if (!courseId) return
+
+    const { name, description, subject, language, objectives } = JSON.parse(req.body.basicDetails)
+    // TODO: validate form with JOI, trim fields.
+
+    let courseLanguage = await Language.findOne({ name: language })
+    // Creating here if not exist.
+    if (!courseLanguage) {
+        courseLanguage = await Language.create({
+            name: language
+        })
+    }
+
+    let courseSubject = await Subject.findOne({ name: subject })
+
+    if (courseSubject && courseSubject.isBlocked) return next(new ApiError(
+        400, "The selected subject is blocked. Please choose another one."
+    ))
+
+    // TODO: check another course exist with name, subject and language same for this user
+    const existingCourse = await Course.aggregate([
+        {
+            $match: {
+                _id: {
+                    $ne: new mongoose.Types.ObjectId(courseId),
+                },
+                name,
+                subject: courseSubject?._id,
+                language: courseLanguage?._id,
+                instructor: req.user._id
+            }
+        }
+    ])
+
+    if (existingCourse?.length) return next(new ApiError(400,
+        `A course with the name ${existingCourse[0].name}, language ${courseLanguage.name},
+         and subject ${courseSubject?.name}' already exists.`
+    ))
+
+    const courseDetails = await Course.findOne({ _id: courseId })
+    if (!courseDetails) return
+
+    courseDetails.name = name
+    courseDetails.description = description
+    courseDetails.subject = courseSubject?._id as Types.ObjectId
+    courseDetails.language = courseLanguage._id as Types.ObjectId
+    courseDetails.objectives = objectives
+
+    if (req.files) {
+        const filesArr: any | Express.Multer.File[] = req.files;
+        if (Array.isArray(filesArr)) {
+            const thumbnailFile = filesArr.find((file) => (file.fieldname === "thumbnail"));
+            if (thumbnailFile) {
+                const image = await uploadOnCloudinary(thumbnailFile.path) as { url: string };
+                courseDetails.thumbnail = image.url
+            }
+        }
+    }
+
+    await courseDetails.save()
+
+    const existingLessons = await Lesson.aggregate([
+        {
+            $match: {
+                course: new mongoose.Types.ObjectId(courseId)
+            }
+        }
+    ])
+
+    if (existingLessons?.length) {
+        const inputLessons: Lesson[] = req.body.lessons
+
+        for (let i = 0; i < existingLessons.length; i++) {
+            if (!inputLessons) {
+                await Lesson.deleteOne({ order_index: i + 1, course: new mongoose.Types.ObjectId(courseId) })
+                continue
+            }
+
+            const inputLesson = inputLessons[i]
+
+            // If no lesson, user removed it. so remove from course
+            if (!inputLesson) {
+                await Lesson.deleteOne({ order_index: i + 1, course: new mongoose.Types.ObjectId(courseId) })
+            } else {
+                const lesson = await Lesson.findOne({ order_index: i + 1, course: new mongoose.Types.ObjectId(courseId) })
+                if (!lesson) return
+                lesson.name = inputLesson.title
+
+                if (req.files) {
+                    const filesArr: any | Express.Multer.File[] = req.files;
+                    if (Array.isArray(filesArr)) {
+                        const lessonFile = filesArr.find((file) => (file.fieldname === `lessons[${i}][content]`));
+                        if (lessonFile) {
+                            const uploadedFile = await uploadOnCloudinary(lessonFile.path) as { url: string };
+                            lesson.content = uploadedFile.url
+                        }
+                    }
+                }
+
+                await lesson.save()
+            }
+        }
+    }
+
+    // If inputlesson stil exists after removing existing lessons, create
+    // new lessons.
+    const inputLessons: Lesson[] = req.body.lessons
+    if (inputLessons && inputLessons.length > existingLessons.length) {
+
+        for (let i = 0; i < inputLessons.length - existingLessons.length; i++) {
+            let content
+
+            if (req.files) {
+                const filesArr: any | Express.Multer.File[] = req.files;
+                if (Array.isArray(filesArr)) {
+                    const lessonFile = filesArr.find((file) => (file.fieldname === `lessons[${existingLessons.length + i}][content]`));
+                    if (lessonFile) {
+                        content = await uploadOnCloudinary(lessonFile.path) as { url: string };
+                    }
+                }
+            }
+
+            await Lesson.create({
+                name: inputLessons[existingLessons.length + i]?.title,
+                course: courseDetails?._id,
+                content: content?.url,
+                order_index: existingLessons.length + i + 1
+            })
+        }
+    }
+
+    return res.json(new ApiResponse(200, {}, "Your course has been updated successfully. All changes have been saved."))
 
 })
 
@@ -225,7 +367,7 @@ const getAllCoursesForInstructor = asyncHandler(async (req, res, next) => {
         {
             $match: {
                 instructor: new Types.ObjectId(req.user._id),
-                isBlocked: false 
+                isBlocked: false
             }
         },
         {
@@ -285,7 +427,7 @@ const getAllCoursesForInstructor = asyncHandler(async (req, res, next) => {
         }
     ])
 
-    return res.json(new ApiResponse(200, {allCourses}))
+    return res.json(new ApiResponse(200, { allCourses }))
 })
 
 const getCourseDetails = asyncHandler(async (req, res, next) => {
@@ -390,6 +532,7 @@ const getCourseDetails = asyncHandler(async (req, res, next) => {
 
 export {
     createCourse,
+    updateCourse,
     createSubject,
     getAllSubjectsForInstructor,
     getAllCoursesForLearner,
