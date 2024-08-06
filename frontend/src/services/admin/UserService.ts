@@ -15,7 +15,7 @@ export const getAllUsers = async (): Promise<ApiResponse<IResponse> | IApiError>
 }
 
 export const userUpdateService = async (role: "LEARNER" | "INSTRUCTOR", id: string): Promise<ApiResponse<{ learner?: IUser, instructor?: IUser }> | IApiError> => {
-    const requestOptions = getRequestOptions("POST", { id })
+    const requestOptions = getRequestOptions("POST", { id }) // TOOD: Change this to Patch
     if (role === "LEARNER") {
         return await makeRequest(ADMIN_BASE_URL, "/block-or-unblock-learner", requestOptions)
     } else {

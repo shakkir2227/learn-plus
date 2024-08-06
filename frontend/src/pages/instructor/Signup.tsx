@@ -57,7 +57,6 @@ const Signup: React.FC = () => {
                     <div className="grid gap-4 mt-5 ">
                         <div className="grid  w-11/12 mx-auto">
                             <Label htmlFor="name">Name</Label>
-                            <p className='text-xs mb-1 text-red-600 '>{signupFormError.nameError} </p>
                             <Input
                                 id="name"
                                 type="text"
@@ -65,11 +64,10 @@ const Signup: React.FC = () => {
                                 value={signupFormData.name}
                                 onChange={handleChange}
                             />
+                            <p className='text-xs  text-red-600  mt-1'>{signupFormError.nameError} </p>
                         </div>
                         <div className="grid w-11/12 mx-auto">
                             <Label htmlFor="email">Email</Label>
-                            <p className='md:ml-8 ml-5 text-xs mb-1 text-red-600'>{signupFormError.emailError} </p>
-
                             <Input
                                 id="email"
                                 type="email"
@@ -77,16 +75,17 @@ const Signup: React.FC = () => {
                                 value={signupFormData.email}
                                 onChange={handleChange}
                             />
+                            <p className='md:ml-8 ml-5 text-xs text-red-600 mt-1'>{signupFormError.emailError} </p>
                         </div>
                         <div className="grid w-11/12 mx-auto">
                             <Label htmlFor="password">Password</Label>
-                            <p className='text-xs  mb-1 text-red-600 mr-1'>{signupFormError.passwordError} </p>
                             <Input
                                 id="password"
                                 type="password"
                                 required
                                 value={signupFormData.password}
                                 onChange={handleChange} />
+                            <p className='text-xs  text-red-600 mr-1 mt-1'>{signupFormError.passwordError} </p>
                         </div>
                         <Button type="submit" className="w-11/12 mx-auto" disabled={loading}>
                             Sign up

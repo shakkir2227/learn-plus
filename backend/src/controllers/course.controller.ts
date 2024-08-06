@@ -430,6 +430,47 @@ const getAllCoursesForInstructor = asyncHandler(async (req, res, next) => {
     return res.json(new ApiResponse(200, { allCourses }))
 })
 
+const getAllCoursesAndSubjectsForAdmin = asyncHandler(async (req, res, next) => {
+
+    const allCourses = await Course.aggregate([
+        {
+            $lookup: {
+                from: "instructors",
+                localField: "instructor",
+                foreignField: "_id",
+                as: "instructor"
+            }
+        },
+        {
+            $unwind: "$instructor"
+        },
+        {
+            $addFields: {
+                instructorName: "$instructor.name",
+            },
+
+        },
+        {
+            $project: {
+                name: 1,
+                instructorName: 1,
+                isBlocked: 1,
+            }
+        }
+    ])
+
+    const allSubjects = await Subject.aggregate([
+        {
+            $project: {
+                name: 1,
+                isBlocked: 1
+            }
+        }
+    ])
+
+    return res.json(new ApiResponse(200, { allCourses, allSubjects }))
+})
+
 const getCourseDetails = asyncHandler(async (req, res, next) => {
 
     const { courseId } = req.params
@@ -530,6 +571,20 @@ const getCourseDetails = asyncHandler(async (req, res, next) => {
 
 })
 
+const blockOrUnblockCourse = asyncHandler(async (req, res, next) => {
+    const { courseId } = req.body
+    if (!courseId) return
+
+    const course = await Course.findOne({ _id: courseId }, { isBlocked: 1 })
+    if (!course) return
+
+    course.isBlocked = !course.isBlocked
+    await course.save()
+
+    return res.json(new ApiResponse(200, { course }))
+
+})
+
 export {
     createCourse,
     updateCourse,
@@ -537,5 +592,7 @@ export {
     getAllSubjectsForInstructor,
     getAllCoursesForLearner,
     getAllCoursesForInstructor,
+    getAllCoursesAndSubjectsForAdmin,
     getCourseDetails,
+    blockOrUnblockCourse
 }

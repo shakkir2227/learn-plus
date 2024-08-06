@@ -171,6 +171,10 @@ const CourseDetails = () => {
                 <Footer />
             </>
             }
+            {
+                !course &&
+                <p>No course found.</p>
+            }
         </div >
     )
 }

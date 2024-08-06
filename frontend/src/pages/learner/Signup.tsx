@@ -55,29 +55,29 @@ const Signup: React.FC = () => {
                     handleSubmit(signupFormData)
                 }} className=' flex flex-col h-full' >
                     <label htmlFor='name' className='md:ml-8 ml-5 mt-3' >Name </label>
-                    <p className='md:ml-8 ml-5 text-xs mb-1 text-red-600 '>{signupFormError.nameError} </p>
                     <input className='bg-inputColor  border-gray-400 border-2 rounded-md w-5/6 mx-auto h-9 px-2'
                         type='text'
                         id='name'
                         value={signupFormData.name}
                         onChange={handleChange}
                     />
+                    <p className='md:ml-8 ml-5 text-xs mb-1 text-red-600 '>{signupFormError.nameError} </p>
                     <label htmlFor='email' className='md:ml-8 ml-5 mt-3' >Email </label>
-                    <p className='md:ml-8 ml-5 text-xs mb-1 text-red-600'>{signupFormError.emailError} </p>
                     <input className='bg-inputColor  border-gray-400 border-2 rounded-md w-5/6 mx-auto h-9 px-2'
                         type='email'
                         id='email'
                         value={signupFormData.email}
                         onChange={handleChange}
                     />
+                    <p className='md:ml-8 ml-5 text-xs mb-1 text-red-600'>{signupFormError.emailError} </p>
                     <label htmlFor='password' className='md:ml-8 ml-5 mt-3 '>Password </label>
-                    <p className='md:ml-8 ml-5 text-xs mb-1 text-red-600 mr-1'>{signupFormError.passwordError} </p>
                     <input className='bg-inputColor  border-gray-400 border-2 rounded-md w-5/6 mx-auto h-9 px-2'
                         type='password'
                         id='password'
                         value={signupFormData.password}
                         onChange={handleChange}
                     />
+                    <p className='md:ml-8 ml-5 text-xs mb-1 text-red-600 mr-1'>{signupFormError.passwordError} </p>
                     <Button className='w-5/6 mx-auto mt-5' disabled={loading} >Sign up</Button>
                     <p className='text-center my-5 text-sm'>Already on Learn plus? <Link to={LEARNER_ROUTE_PATHS.login} className='cursor-pointer underline '> Log in </Link></p>
                 </form>

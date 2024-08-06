@@ -169,18 +169,33 @@ const UsersList = () => {
                                                     <Switch checked={instructor.isBlocked} className='data-[state=checked]:bg-red-600 data-[state=unchecked]:bg-gray-600' id="airplane-mode" />
                                                 </div>
                                             </AlertDialogTrigger>
-                                            <AlertDialogContent>
-                                                <AlertDialogHeader>
-                                                    <AlertDialogTitle>Are you sure you want to block this user?</AlertDialogTitle>
-                                                    <AlertDialogDescription>
-                                                        Blocking this user will prevent them from accessing their account and participating in the platform. This action can be reversed by unblocking the user later.
-                                                    </AlertDialogDescription>
-                                                </AlertDialogHeader>
-                                                <AlertDialogFooter>
-                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={() => toggleUserBlocking("INSTRUCTOR", instructor._id)}>Continue</AlertDialogAction>
-                                                </AlertDialogFooter>
-                                            </AlertDialogContent>
+                                            {!instructor.isBlocked ?
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle>Are you sure you want to block this user?</AlertDialogTitle>
+                                                        <AlertDialogDescription>
+                                                            Blocking this user will prevent them from accessing their account and participating in the platform. This action can be reversed by unblocking the user later.
+                                                        </AlertDialogDescription>
+                                                    </AlertDialogHeader>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                        <AlertDialogAction onClick={() => toggleUserBlocking("INSTRUCTOR", instructor._id)}>Continue</AlertDialogAction>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                                :
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle>Are you sure you want to Unblock this user?</AlertDialogTitle>
+                                                        <AlertDialogDescription>
+                                                            Unblocking this user will restore their access to their account and allow them to participate fully on the platform again. You can reverse this action if needed by blocking the user once more.
+                                                        </AlertDialogDescription>
+                                                    </AlertDialogHeader>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                        <AlertDialogAction onClick={() => toggleUserBlocking("INSTRUCTOR", instructor._id)}>Continue</AlertDialogAction>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            }
                                         </AlertDialog>
                                     </TableCell>
                                 </TableRow>
